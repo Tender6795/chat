@@ -2,23 +2,17 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtGuardStrategy } from './guards/jwt-auth.strategy';
-import { JwtGuard } from './guards/jwt-auth.guard';
-import { GoogleOauthGuard } from './guards/google-oauth.guard';
-import { GoogleStrategy } from './guards/google-oauth.strategy';
+import { PassportModule } from '@nestjs/passport';
+import { UserModule } from '@user/user.module';
+import { options } from './config';
+
 @Module({
   imports: [
-    JwtModule.registerAsync({
-      useFactory: () => ({
-        secret: process.env.JWT_SECRET,
-        signOptions: {
-          expiresIn: '3d',
-        },
-        global: true,
-      }),
-    }),
+    PassportModule, 
+    JwtModule.registerAsync(options()),
+    UserModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtGuardStrategy, JwtGuard, GoogleStrategy],
+  providers: [AuthService],
 })
 export class AuthModule {}

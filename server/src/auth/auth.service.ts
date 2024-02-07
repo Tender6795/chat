@@ -1,4 +1,9 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { compareSync } from 'bcrypt';
 import { LoginDto, RegisterDto } from './dto';
 import { UserService } from '@user/user.service';
@@ -19,13 +24,22 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
+    const user: User = await this.userService
+      .findOne(dto.email)
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
+    if (user) {
+      throw new ConflictException('User with this email already exists');
+    }
     return this.userService.save(dto).catch((err) => {
       this.logger.error(err);
       return null;
     });
   }
 
-  async login(dto: LoginDto): Promise<Tokens> {
+  async login(dto: LoginDto, agent: string): Promise<Tokens> {
     const user: User = await this.userService
       .findOne(dto.email)
       .catch((err) => {
@@ -35,24 +49,67 @@ export class AuthService {
     if (!user || !compareSync(dto.password, user.password)) {
       throw new UnauthorizedException('Wrong email or password');
     }
-    const accessToken = this.jwtService.sign({
-      id: user.id,
-      email: user.email,
-      roles: user.roles,
-    });
-    const refreshToken = await this.getRefreshToken(user.id);
+    return this.generateTokens(user, agent);
+  }
+
+  private async generateTokens(user: User, agent: string): Promise<Tokens> {
+    const accessToken =
+      'Bearer ' +
+      this.jwtService.sign({
+        id: user.id,
+        email: user.email,
+        roles: user.roles,
+      });
+    const refreshToken = await this.getRefreshToken(user.id, agent);
     return {
       accessToken,
       refreshToken,
     };
   }
 
-  private async getRefreshToken(userId: string): Promise<Token> {
-    return this.prismaService.token.create({
-      data: {
+  async refreshTokens(refreshToken: string, agent: string): Promise<Tokens> {
+    const token = await this.prismaService.token.findUnique({
+      where: { token: refreshToken },
+    });
+
+    if (!token) {
+      throw new UnauthorizedException();
+    }
+
+    await this.prismaService.token.delete({
+      where: { token: refreshToken },
+    });
+
+    if (new Date(token.exp) < new Date()) {
+      throw new UnauthorizedException();
+    }
+
+    const user = await this.userService.findOne(token.userId);
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return this.generateTokens(user, agent);
+  }
+
+  private async getRefreshToken(userId: string, agent: string): Promise<Token> {
+    const _token = await this.prismaService.token.findFirst({
+      where: { userId, userAgent: agent },
+    });
+
+    const token = _token?.token ?? ''
+    return this.prismaService.token.upsert({
+      where: { token },
+      update: {
+        token: v4(),
+        exp: add(new Date(), { months: 1 }),
+      },
+      create: {
         token: v4(),
         exp: add(new Date(), { months: 1 }),
         userId,
+        userAgent: agent,
       },
     });
   }

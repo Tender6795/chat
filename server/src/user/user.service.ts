@@ -25,12 +25,14 @@ export class UserService {
     });
   }
 
-
   delete(id: string) {
-    return this.prismaService.user.delete({ where: { id } });
+    return this.prismaService.user.delete({
+      where: { id },
+      select: { id: true },
+    });
   }
 
-  private hashPassword( password: string){
-    return hashSync(password, genSaltSync(10))
+  private hashPassword(password: string) {
+    return hashSync(password, genSaltSync(10));
   }
 }

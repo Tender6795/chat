@@ -98,7 +98,7 @@ export class AuthService {
       where: { userId, userAgent: agent },
     });
 
-    const token = _token?.token ?? ''
+    const token = _token?.token ?? '';
     return this.prismaService.token.upsert({
       where: { token },
       update: {
@@ -112,5 +112,9 @@ export class AuthService {
         userAgent: agent,
       },
     });
+  }
+
+  deleteRefreshToken(token: string) {
+    return this.prismaService.token.delete({ where: { token } });
   }
 }

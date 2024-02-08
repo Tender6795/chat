@@ -10,19 +10,13 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponce } from './responses';
+import { CurrentUser } from '@common/decorators';
+import { JwtPayload } from '@auth/interfaces';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @UseInterceptors(ClassSerializerInterceptor)
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    const user = await this.userService.save(createUserDto);
-    return new UserResponce(user);
-  }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':idOrEmail')
@@ -32,7 +26,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.delete(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string , @CurrentUser() user: JwtPayload) {
+    return this.userService.delete(id, user);
   }
 }

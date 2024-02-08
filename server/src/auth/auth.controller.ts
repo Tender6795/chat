@@ -9,6 +9,7 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -16,9 +17,11 @@ import { Request, Response } from 'express';
 
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
-import { Tokens } from './interfaces';
-import { Cookie, Public, UserAgent } from '@common/decorators';
+import { JwtPayload, Tokens } from './interfaces';
+import { Cookie, CurrentUser, Public, Roles, UserAgent } from '@common/decorators';
 import { UserResponce } from '@user/responses';
+import { RolesGuard } from './guards/role.guard';
+import { Role } from '@prisma/client';
 
 const REFRESH_TOKEN = 'refreshtoken';
 

@@ -6,6 +6,7 @@ import {
   Get,
   HttpStatus,
   Post,
+  Query,
   Req,
   Res,
   UnauthorizedException,
@@ -17,11 +18,13 @@ import { Request, Response } from 'express';
 
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
-import { JwtPayload, Tokens } from './interfaces';
-import { Cookie, CurrentUser, Public, Roles, UserAgent } from '@common/decorators';
+import { Tokens } from './interfaces';
+import { Cookie, Public, UserAgent } from '@common/decorators';
 import { UserResponce } from '@user/responses';
-import { RolesGuard } from './guards/role.guard';
-import { Role } from '@prisma/client';
+import { GoogleGuard } from './guards/google.guard';
+import { HttpService } from '@nestjs/axios';
+import { map, mergeMap, tap } from 'rxjs';
+import { handleTimeoutAndErrors } from '@common/helpers';
 
 const REFRESH_TOKEN = 'refreshtoken';
 
@@ -31,6 +34,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
   ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -108,5 +112,33 @@ export class AuthController {
       path: '/',
     });
     res.status(HttpStatus.CREATED).json({ accessToken: tokens.accessToken });
+  }
+
+  @UseGuards(GoogleGuard)
+  @Get('google')
+  googleAuth() {}
+
+  @UseGuards(GoogleGuard)
+  @Get('google/callback')
+  googleAuthCallback(@Req() req: Request, @Res() res: Response) {
+    const token = req.user['accessToken'];
+    return res.redirect(
+      `http://localhost:3000/api/auth/success?token=${token}`,
+    );
+  }
+
+  //TODO in frotend
+  @Get('success')
+  success(@Query('token') token: string, @UserAgent() agent: string) {
+    return this.httpService
+      .get(
+        `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`,
+      )
+      .pipe(
+        mergeMap(({ data: { email } }) =>
+          this.authService.googleAuth(email, agent),
+        ),
+        handleTimeoutAndErrors(),
+      );
   }
 }

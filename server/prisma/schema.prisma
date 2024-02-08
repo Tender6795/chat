@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String?
+  provider  Provider?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
   roles     Role[]
   Token     Token[]
 
@@ -25,7 +26,7 @@ model User {
 model Token {
   token     String   @unique
   exp       DateTime
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   userAgent String   @map("user_agent")
 
@@ -35,4 +36,8 @@ model Token {
 enum Role {
   ADMIN
   USER
+}
+
+enum Provider {
+  GOOGLE
 }

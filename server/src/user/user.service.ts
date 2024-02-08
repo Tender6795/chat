@@ -17,17 +17,20 @@ export class UserService {
   ) {}
 
   save(user: Partial<User>) {
+    const hashedPassword = user?.password
+      ? this.hashPassword(user.password)
+      : null;
     return this.prismaService.user.create({
       data: {
         email: user.email,
-        password: this.hashPassword(user.password),
+        password: hashedPassword,
         roles: ['USER'],
       },
     });
   }
 
-  async findOne(idOrEmail: string, isRest = false) {
-    if (isRest) {
+  async findOne(idOrEmail: string, isReset = false): Promise<User> {
+    if (isReset) {
       await this.cacheManager.del(idOrEmail);
     }
     const user = await this.cacheManager.get<User>(idOrEmail);
@@ -37,7 +40,9 @@ export class UserService {
           OR: [{ id: idOrEmail }, { email: idOrEmail }],
         },
       });
-      if (!user) return null;
+      if (!user) {
+        return null;
+      }
       await this.cacheManager.set(
         idOrEmail,
         user,

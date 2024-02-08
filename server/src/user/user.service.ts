@@ -48,10 +48,15 @@ export class UserService {
     return user;
   }
 
-  delete(id: string, user: JwtPayload) {
+  async delete(id: string, user: JwtPayload) {
     if (user.id !== id && !user.roles.includes(Role.ADMIN)) {
       throw new ForbiddenException();
     }
+
+    await Promise.all([
+      this.cacheManager.del(id),
+      this.cacheManager.del(user.email),
+    ]);
 
     return this.prismaService.user.delete({
       where: { id },

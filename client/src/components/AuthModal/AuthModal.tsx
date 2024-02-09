@@ -7,6 +7,7 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { login } from "@/api";
 
 interface FormValues {
   email: string;
@@ -45,7 +46,8 @@ const LoginModal: React.FC = () => {
 
   const handleFormSubmit = (values: FormValues, _: any, actionType: string) => {
     if ((actionType = "login")) {
-      alert("login");
+      // alert("login");
+      login(values)
     } else {
       alert("registration");
     }

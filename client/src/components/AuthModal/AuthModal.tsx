@@ -62,7 +62,7 @@ const LoginModal: React.FC = () => {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Login
+            Auth
           </Typography>
           <Formik
             initialValues={{ email: "", password: "" }}

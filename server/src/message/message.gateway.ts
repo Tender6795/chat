@@ -1,15 +1,34 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { Server } from 'socket.io';
+import { OnModuleInit } from '@nestjs/common';
 
 @WebSocketGateway()
-export class MessageGateway {
+export class MessageGateway implements OnModuleInit {
   constructor(private readonly messageService: MessageService) {}
+  @WebSocketServer()
+  sever: Server;
+
+  onModuleInit() {
+    this.sever.on('connection',(socket)=>{
+      console.log('Connected socket.id:', socket.id);
+    })
+  }
 
   @SubscribeMessage('createMessage')
   create(@MessageBody() createMessageDto: CreateMessageDto) {
     console.log('========111111111==========', createMessageDto);
+    this.sever.emit('onMessage',{
+      msg:'New Message',
+      content: createMessageDto
+    })
     return this.messageService.create(createMessageDto);
   }
 

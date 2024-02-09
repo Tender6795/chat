@@ -116,20 +116,24 @@ export class AuthController {
 
   @UseGuards(GoogleGuard)
   @Get('google')
-  googleAuth() {}
+  googleAuth() {
+    console.log('==============1===========');
+  }
 
   @UseGuards(GoogleGuard)
   @Get('google/callback')
   googleAuthCallback(@Req() req: Request, @Res() res: Response) {
     const token = req.user['accessToken'];
+    console.log('==============2===========');
     return res.redirect(
-      `http://localhost:3000/api/auth/success?token=${token}`,
+      `http://localhost:5000/api/auth/success?token=${token}`, /////
     );
   }
 
   //TODO in frotend
   @Get('success')
   success(@Query('token') token: string, @UserAgent() agent: string) {
+    console.log('==============3===========');
     return this.httpService
       .get(
         `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`,

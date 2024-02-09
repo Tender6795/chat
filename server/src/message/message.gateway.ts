@@ -9,6 +9,7 @@ export class MessageGateway {
 
   @SubscribeMessage('createMessage')
   create(@MessageBody() createMessageDto: CreateMessageDto) {
+    console.log('========111111111==========', createMessageDto);
     return this.messageService.create(createMessageDto);
   }
 

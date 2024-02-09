@@ -7,7 +7,7 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { login, register } from "@/api";
+import { google, login, register } from "@/api";
 
 interface FormValues {
   email: string;
@@ -41,7 +41,7 @@ const LoginModal: React.FC = () => {
   const handleClose = () => setOpen(false);
 
   const handleGoogleLogin = () => {
-    // Handle Google login logic
+    google()
   };
 
   const handleFormSubmit = (values: FormValues, _: any, actionType: string) => {

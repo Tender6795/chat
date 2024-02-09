@@ -7,7 +7,7 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { login } from "@/api";
+import { login, register } from "@/api";
 
 interface FormValues {
   email: string;
@@ -45,12 +45,7 @@ const LoginModal: React.FC = () => {
   };
 
   const handleFormSubmit = (values: FormValues, _: any, actionType: string) => {
-    if ((actionType = "login")) {
-      // alert("login");
-      login(values)
-    } else {
-      alert("registration");
-    }
+    actionType === "login" ? login(values) : register(values);
   };
 
   return (
@@ -69,9 +64,7 @@ const LoginModal: React.FC = () => {
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={validationSchema}
-            onSubmit={
-              (values, _) => handleFormSubmit(values, _, actionType) 
-            }
+            onSubmit={(values, _) => handleFormSubmit(values, _, actionType)}
           >
             {({ isSubmitting }) => (
               <Form>

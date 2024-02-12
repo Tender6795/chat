@@ -45,15 +45,41 @@ export class RoomService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} room`;
+  async findOne(roomId: string) {
+    try {
+      const group = await this.prismaService.room.findUnique({
+        where: { id: roomId },
+        include: {
+          members: true,
+          messages: true,
+        },
+      });
+
+      if (!group) {
+        throw new Error('room not found');
+      }
+
+      return group;
+    } catch (error) {
+      console.error('Error fetching room by id:', error);
+      throw new Error('Failed to fetch room by id');
+    }
   }
 
   update(id: number, updateRoomDto: UpdateRoomDto) {
     return `This action updates a #${id} room`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} room`;
+  async remove(roomId: string) {
+    try {
+      const deletedGroup = await this.prismaService.room.delete({
+        where: { id: roomId },
+      });
+
+      return deletedGroup;
+    } catch (error) {
+      console.error('Error deleting room by id:', error);
+      throw new Error('Failed to delete room by id');
+    }
   }
 }

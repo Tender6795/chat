@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { google, login, register } from "@/api";
+import { signIn } from "next-auth/react";
 
 interface FormValues {
   email: string;
@@ -41,11 +42,16 @@ const LoginModal: React.FC = () => {
   const handleClose = () => setOpen(false);
 
   const handleGoogleLogin = () => {
-    google()
+    // google()
+    signIn("google");
   };
 
   const handleFormSubmit = (values: FormValues, _: any, actionType: string) => {
-    actionType === "login" ? login(values) : register(values);
+    if (actionType === "login") {
+      login(values);
+    } else {
+      register(values);
+    }
   };
 
   return (
@@ -116,7 +122,7 @@ const LoginModal: React.FC = () => {
                   Registration
                 </Button>
 
-                <Button
+                {/* <Button
                   variant="contained"
                   color="secondary"
                   onClick={handleGoogleLogin}
@@ -124,7 +130,7 @@ const LoginModal: React.FC = () => {
                   style={{ marginTop: "1rem" }}
                 >
                   Login with Google
-                </Button>
+                </Button> */}
               </Form>
             )}
           </Formik>

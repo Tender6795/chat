@@ -9,26 +9,38 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { Server } from 'socket.io';
 import { OnModuleInit } from '@nestjs/common';
+import { CurrentUserWebsocet } from '@common/decorators';
+import { JwtPayload } from '@auth/interfaces';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: ['http://localhost:3000'],
+  },
+})
 export class MessageGateway implements OnModuleInit {
   constructor(private readonly messageService: MessageService) {}
   @WebSocketServer()
   sever: Server;
 
   onModuleInit() {
-    this.sever.on('connection',(socket)=>{
+    this.sever.on('connection', (socket) => {
       console.log('Connected socket.id:', socket.id);
-    })
+    });
   }
 
+  // @Public() //TODO delete in future
   @SubscribeMessage('createMessage')
-  create(@MessageBody() createMessageDto: CreateMessageDto) {
+  create(
+    @MessageBody() createMessageDto: CreateMessageDto,
+    @CurrentUserWebsocet() user: JwtPayload,
+  ) {
     console.log('========111111111==========', createMessageDto);
-    this.sever.emit('onMessage',{
-      msg:'New Message',
-      content: createMessageDto
-    })
+    console.log('========222222222==========', user);
+
+    this.sever.emit('onMessage', {
+      msg: 'New Message',
+      content: createMessageDto,
+    });
     return this.messageService.create(createMessageDto);
   }
 

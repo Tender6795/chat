@@ -12,7 +12,7 @@ interface State {
 
 const socket = io("http://localhost:5000", {
   extraHeaders: {
-    authorization: localStorage?.getItem("token") || 'vcvcvcvc'
+    authorization: localStorage.getItem("token") || 'vcvcvcvc'
   }
 });
 
@@ -37,7 +37,7 @@ export const Websocket: React.FC = () => {
     return () => {
       socket.off("OnMessage");
       socket.off("createMessage");
-      registration     socket.off("connect");
+      socket.off("connect");
     };
   }, []);
 

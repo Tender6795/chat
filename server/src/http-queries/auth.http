@@ -1,0 +1,19 @@
+
+POST http://localhost:5000/api/auth/register HTTP/1.1
+content-type: application/json
+
+{
+    "email": "tender6795111@gmail.com",
+    "password": "1234qwer"
+}
+
+###
+POST http://localhost:5000/api/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "tender6795111@gmail.com",
+    "password": "1234qwer"
+}
+
+###

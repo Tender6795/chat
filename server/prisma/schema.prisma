@@ -11,14 +11,17 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
+  id        String     @id @default(uuid())
+  email     String     @unique
   password  String?
   provider  Provider?
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @default(now()) @map("updated_at")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @default(now()) @map("updated_at")
   roles     Role[]
   Token     Token[]
+  Message   Message[]
+  Room      Room[]
+  RoomUser  RoomUser[]
 
   @@map("users")
 }
@@ -40,4 +43,33 @@ enum Role {
 
 enum Provider {
   GOOGLE
+}
+
+model Room {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  creator     User       @relation(fields: [creatorId], references: [id])
+  creatorId   String
+  members     RoomUser[]
+  messages    Message[]
+}
+
+model RoomUser {
+  id     String   @id @default(uuid())
+  room   Room @relation(fields: [roomId], references: [id])
+  roomId String
+  user   User @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  fromId    String
+  from      User     @relation(fields: [fromId], references: [id])
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id])
+  text      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
 }

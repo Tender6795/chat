@@ -2,14 +2,16 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
+import { CurrentUser } from '@common/decorators';
+import { JwtPayload } from '@auth/interfaces';
 
 @Controller('room')
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
   @Post()
-  create(@Body() createRoomDto: CreateRoomDto) {
-    return this.roomService.create(createRoomDto);
+  create(@Body() createRoomDto: CreateRoomDto, @CurrentUser() user: JwtPayload) {
+    return this.roomService.create(createRoomDto, user.id);
   }
 
   @Get()

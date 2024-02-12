@@ -1,11 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
+import { PrismaService } from '@prisma/prisma.service';
 
 @Injectable()
 export class RoomService {
-  create(createRoomDto: CreateRoomDto) {
-    return 'This action adds a new room';
+  constructor(
+    private readonly prismaService: PrismaService,
+    // @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
+  async create(createRoomDto: CreateRoomDto, creatorId: string) {
+    return await this.prismaService.room.create({
+      data:{
+        name: createRoomDto.name,
+        description: createRoomDto.description,
+        creatorId
+      }
+    })
   }
 
   findAll() {

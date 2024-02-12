@@ -11,17 +11,17 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  email     String     @unique
-  password  String?
-  provider  Provider?
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @default(now()) @map("updated_at")
-  roles     Role[]
-  Token     Token[]
-  Message   Message[]
-  Room      Room[]
-  RoomUser  RoomUser[]
+  id           String      @id @default(uuid())
+  email        String      @unique
+  password     String?
+  provider     Provider?
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @default(now()) @map("updated_at")
+  roles        Role[]
+  Token        Token[]
+  Message      Message[]
+  createdRooms Room[]      // Переименовано из "Room" в "createdRooms"
+  RoomUser     RoomUser[]
 
   @@map("users")
 }

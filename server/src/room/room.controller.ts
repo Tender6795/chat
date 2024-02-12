@@ -15,8 +15,8 @@ export class RoomController {
   }
 
   @Get()
-  findAll() {
-    return this.roomService.findAll();
+  findAll( @CurrentUser() user: JwtPayload) {
+    return this.roomService.findAll(user.id);
   }
 
   @Get(':id')

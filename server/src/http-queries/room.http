@@ -7,3 +7,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0N2U3MzEwL
     "name": "test room",
     "description": "test description"
 }
+
+###
+
+GET http://localhost:5000/api/room HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0N2U3MzEwLWRiNGItNGRkNS04NTI3LTA2OWUxMDRkMmQ2ZSIsImVtYWlsIjoidGVuZGVyNjc5NTExMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTcwNzc1NDQ2NywiZXhwIjoxNzA3ODQwODY3fQ.OrcHKnjCEfGbr-dIqP6HlvecQgAzMelEAeU-g35n0Qs

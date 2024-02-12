@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { PrismaService } from '@prisma/prisma.service';
+import { JwtPayload } from '@auth/interfaces';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class RoomService {
@@ -70,8 +72,16 @@ export class RoomService {
     return `This action updates a #${id} room`;
   }
 
-  async remove(roomId: string) {
+  async remove(roomId: string, user: JwtPayload) {
     try {
+      const room = await this.prismaService.room.findUnique({
+        where: { id: roomId },
+      });
+
+      if (room.creatorId !== user.id && !user.roles.includes(Role.ADMIN)) {
+        throw new ForbiddenException();
+      }
+
       const deletedGroup = await this.prismaService.room.delete({
         where: { id: roomId },
       });

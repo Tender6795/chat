@@ -30,7 +30,7 @@ export class RoomController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.roomService.remove(id);
+  remove(@Param('id') id: string,  @CurrentUser() user: JwtPayload) {
+    return this.roomService.remove(id, user);
   }
 }

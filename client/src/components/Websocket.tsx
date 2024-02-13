@@ -12,7 +12,7 @@ interface State {
 
 const socket = io("http://localhost:5000", {
   extraHeaders: {
-    authorization: localStorage.getItem("token") || 'vcvcvcvc'
+    authorization: typeof window !== "undefined" ? localStorage.getItem("token") || '' : ''
   }
 });
 

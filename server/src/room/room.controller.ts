@@ -1,21 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { CurrentUser } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
+import { AddUserToRoomDto } from './dto/add-user-to-room.dto';
 
 @Controller('room')
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
   @Post()
-  create(@Body() createRoomDto: CreateRoomDto, @CurrentUser() user: JwtPayload) {
+  create(
+    @Body() createRoomDto: CreateRoomDto,
+    @CurrentUser() user: JwtPayload,
+  ) {
     return this.roomService.create(createRoomDto, user.id);
   }
 
+  @Post('addUserToRoom')
+  addUserToRoom(
+    @Body() addUserToRoomDto: AddUserToRoomDto,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.roomService.addUserToRoom(addUserToRoomDto, user);
+  }
+
   @Get()
-  findAll( @CurrentUser() user: JwtPayload) {
+  findAll(@CurrentUser() user: JwtPayload) {
     return this.roomService.findAll(user.id);
   }
 
@@ -30,7 +50,7 @@ export class RoomController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string,  @CurrentUser() user: JwtPayload) {
+  remove(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
     return this.roomService.remove(id, user);
   }
 }

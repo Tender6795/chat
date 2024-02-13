@@ -4,6 +4,7 @@ import { UpdateRoomDto } from './dto/update-room.dto';
 import { PrismaService } from '@prisma/prisma.service';
 import { JwtPayload } from '@auth/interfaces';
 import { Role } from '@prisma/client';
+import { AddUserToRoomDto } from './dto/add-user-to-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -90,6 +91,41 @@ export class RoomService {
     } catch (error) {
       console.error('Error deleting room by id:', error);
       throw new Error('Failed to delete room by id');
+    }
+  }
+
+  async addUserToRoom(addUserToRoomDto: AddUserToRoomDto, user: JwtPayload) {
+    try {
+      const { roomId, userId } = addUserToRoomDto;
+      const room = await this.prismaService.room.findUnique({
+        where: { id: roomId },
+        include: { members: true }, // Включаем информацию о членах комнаты
+      });
+  
+      if (!room) {
+        throw new Error('Room not found.');
+      }
+  
+      if (room.creatorId !== user.id && !user.roles.includes(Role.ADMIN)) {
+        throw new Error('Permission denied. You are not authorized to add users to this room.');
+      }
+  
+      const userExistsInRoom = room.members.some((member) => member.userId === userId);
+      if (userExistsInRoom) {
+        throw new Error('User is already a member of this room.');
+      }
+  
+      const roomUser = await this.prismaService.roomUser.create({
+        data: {
+          roomId: roomId,
+          userId: userId,
+        },
+      });
+  
+      return roomUser;
+    } catch (error) {
+      console.error('Error adding user to room:', error);
+      throw new Error('Failed to add user to room.');
     }
   }
 }

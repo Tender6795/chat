@@ -14,6 +14,9 @@ export const google = () => get("/auth/google");
 export const getAllRoom =()=>get('/room')
 export const creatRoom =(body: RoomCreate)=>post('/room', body)
 
+//current user 
+export const currentUser = () => post("/user/currentUser");
+
 // /* users requests */
 // export const updateUser = (body) => patch(`/user/${body.id}`, body.data);
 // export const getUserByEmail = (body) => get(`/user/email/${body}`);

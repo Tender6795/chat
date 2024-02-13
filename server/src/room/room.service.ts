@@ -5,6 +5,7 @@ import { PrismaService } from '@prisma/prisma.service';
 import { JwtPayload } from '@auth/interfaces';
 import { Role } from '@prisma/client';
 import { AddUserToRoomDto } from './dto/add-user-to-room.dto';
+import { DeleteUserFromRoomDto } from './dto/delete-user-from-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -99,33 +100,81 @@ export class RoomService {
       const { roomId, userId } = addUserToRoomDto;
       const room = await this.prismaService.room.findUnique({
         where: { id: roomId },
-        include: { members: true }, // Включаем информацию о членах комнаты
+        include: { members: true },
       });
-  
+
       if (!room) {
         throw new Error('Room not found.');
       }
-  
+
       if (room.creatorId !== user.id && !user.roles.includes(Role.ADMIN)) {
-        throw new Error('Permission denied. You are not authorized to add users to this room.');
+        throw new Error(
+          'Permission denied. You are not authorized to add users to this room.',
+        );
       }
-  
-      const userExistsInRoom = room.members.some((member) => member.userId === userId);
+
+      const userExistsInRoom = room.members.some(
+        (member) => member.userId === userId,
+      );
       if (userExistsInRoom) {
         throw new Error('User is already a member of this room.');
       }
-  
+
       const roomUser = await this.prismaService.roomUser.create({
         data: {
           roomId: roomId,
           userId: userId,
         },
       });
-  
+
       return roomUser;
     } catch (error) {
       console.error('Error adding user to room:', error);
       throw new Error('Failed to add user to room.');
+    }
+  }
+
+  async removeUserFromRoom(
+    deleteUserFromRoomDto: DeleteUserFromRoomDto,
+    requestingUserId: string,
+  ) {
+    try {
+      const { roomId, userId } = deleteUserFromRoomDto;
+
+      const room = await this.prismaService.room.findUnique({
+        where: { id: roomId },
+        include: { creator: true, members: true },
+      });
+
+      const isCreator = room.creatorId === requestingUserId;
+      const isUserToDelete = userId === requestingUserId;
+
+      if (!isCreator && !isUserToDelete) {
+        throw new Error(
+          'Permission denied. You are not authorized to remove this user from the room.',
+        );
+      }
+
+      const userInRoom = room.members.find(
+        (member) => member.userId === userId,
+      );
+      if (!userInRoom) {
+        throw new Error('User is not a member of the room.');
+      }
+
+      await this.prismaService.roomUser.delete({
+        where: {
+          roomId_userId: {
+            roomId: roomId,
+            userId: userId,
+          },
+        },
+      });
+
+      return { roomId, userId };
+    } catch (error) {
+      console.error('Error removing user from the room:', error);
+      throw new Error('Failed to remove user from the room.');
     }
   }
 }

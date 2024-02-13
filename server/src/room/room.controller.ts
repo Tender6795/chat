@@ -13,6 +13,7 @@ import { UpdateRoomDto } from './dto/update-room.dto';
 import { CurrentUser } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
 import { AddUserToRoomDto } from './dto/add-user-to-room.dto';
+import { DeleteUserFromRoomDto } from './dto/delete-user-from-room.dto';
 
 @Controller('room')
 export class RoomController {
@@ -32,6 +33,14 @@ export class RoomController {
     @CurrentUser() user: JwtPayload,
   ) {
     return this.roomService.addUserToRoom(addUserToRoomDto, user);
+  }
+
+  @Post('deleteUserFromRoom')
+  deleteUserFromRoom(
+    @Body() deleteUserFromRoomDto: DeleteUserFromRoomDto,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.roomService.removeUserFromRoom(deleteUserFromRoomDto, user.id);
   }
 
   @Get()

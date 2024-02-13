@@ -43,10 +43,10 @@ export class UserController {
   }
 
   // test
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
-  @Get()
-  me(@CurrentUser() user: JwtPayload) {
+  // @UseGuards(RolesGuard)
+  // @Roles(Role.ADMIN)
+  @Post('currentUser')
+  currentUser(@CurrentUser() user: JwtPayload) {
     return user;
   }
 }

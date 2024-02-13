@@ -72,5 +72,8 @@ export class UserService {
   private hashPassword(password: string) {
     return hashSync(password, genSaltSync(10));
   }
+
+  async findAllUsers() {
+    return await this.prismaService.user.findMany();
+  }
 }
-12;

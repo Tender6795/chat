@@ -29,14 +29,24 @@ export class UserController {
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseUUIDPipe) id: string , @CurrentUser() user: JwtPayload) {
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
     return this.userService.delete(id, user);
   }
-// test
+
+  @Get()
+  async findAllUsers() {
+    const users = await this.userService.findAllUsers();
+    return users.map((user) => new UserResponce(user));
+  }
+
+  // test
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @Get()
-  me(@CurrentUser() user: JwtPayload){
-    return user
+  me(@CurrentUser() user: JwtPayload) {
+    return user;
   }
 }

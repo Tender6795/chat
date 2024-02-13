@@ -1,0 +1,5 @@
+
+GET http://localhost:5000/api/user HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTBlOWUxLWUyN2UtNGU1Ny1iMWQ3LTdhNzliNmNmYTcwYyIsImVtYWlsIjoidGVuZGVyNjc5NTExMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTcwNzgxMTI4OSwiZXhwIjoxNzA3ODk3Njg5fQ.hdNTj6fZ5P9U1E82dj8mE1a81LbT-siJcmpkgTCek2I
+###

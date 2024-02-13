@@ -1,15 +1,32 @@
 import { getAllRoom } from "@/api";
-import React, { useEffect } from "react";
+import { IRoom } from "@/interfaces/rooms.interface";
+import React, { useEffect, useState } from "react";
 
 export const ListOfRooms = () => {
+  const [rooms, setRooms] = useState<IRoom[]>([]);
+
   useEffect(() => {
     getAllRooms();
   }, []);
 
   const getAllRooms = async () => {
-    const rooms = await getAllRoom();
-    console.log({ rooms });
+    try {
+      const roomsFromServer = (await getAllRoom()) as IRoom[];
+      setRooms(roomsFromServer);
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
+    }
   };
 
-  return <div>ListOfRooms</div>;
+  return (
+    <>
+      {rooms.map((room) => (
+        <div key={room.id}>
+          <div>{room.name}</div>
+          <div>{room.description}</div>
+          <div>{room.creatorId}</div>
+        </div>
+      ))}
+    </>
+  );
 };

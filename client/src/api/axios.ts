@@ -34,7 +34,7 @@ const setCustomHeader = (headers: CustomHeaders): CustomHeaders => {
   let custom_headers: CustomHeaders = { ...headers };
 
   if (localStorage.getItem('token')) {
-    custom_headers = { authorization: 'Bearer ' + localStorage.getItem('token'), ...custom_headers };
+    custom_headers = { authorization: '' + localStorage.getItem('token'), ...custom_headers };
   }
 
   return custom_headers;

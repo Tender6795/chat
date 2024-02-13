@@ -1,19 +1,11 @@
 import * as React from "react";
 import { useState } from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
+import { Box, Button, Typography, Modal, TextField } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { google, login, register } from "@/api";
 import { signIn } from "next-auth/react";
-
-interface FormValues {
-  email: string;
-  password: string;
-}
+import { Auth } from "@/interfaces/auth.interface";
 
 const style = {
   position: "absolute",
@@ -27,7 +19,7 @@ const style = {
   p: 4,
 };
 
-const validationSchema: Yup.Schema<FormValues> = Yup.object({
+const validationSchema: Yup.Schema<Auth> = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
@@ -46,12 +38,13 @@ const LoginModal: React.FC = () => {
     signIn("google");
   };
 
-  const handleFormSubmit = (values: FormValues, _: any, actionType: string) => {
+  const handleFormSubmit = async (values: Auth, _: any, actionType: string) => {
     if (actionType === "login") {
-      login(values);
+      await login(values);
     } else {
-      register(values);
+      await register(values);
     }
+    handleClose();
   };
 
   return (

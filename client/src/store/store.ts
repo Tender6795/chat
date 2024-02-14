@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import  currentUserSlice  from './slices/userSlice'
+import allRoomsSlice from './slices/allRoomsSlice'
 // ...
 
 export const store = configureStore({
   reducer: {
     currentUser: currentUserSlice ,
-    // comments: commentsReducer,
+    allRooms: allRoomsSlice,
     // users: usersReducer,
   },
 })

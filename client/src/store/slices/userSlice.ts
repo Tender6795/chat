@@ -23,7 +23,7 @@ const initialState: CurrentUserState = {
 };
 
 export const fetchCurrentUser = createAsyncThunk(
-  "currentUser/fetch",
+  "currentUser",
   async () => {
     try {
       const user = await currentUser();
@@ -35,7 +35,7 @@ export const fetchCurrentUser = createAsyncThunk(
 );
 
 export const fetchLogin = createAsyncThunk(
-  "currentUser/login",
+  "login",
   async (body: Auth) => {
     try {
       await login(body);
@@ -48,7 +48,7 @@ export const fetchLogin = createAsyncThunk(
 );
 
 export const fetchRegistration = createAsyncThunk(
-  "currentUser/register",
+  "register",
   async (body: Auth) => {
     try {
       await register(body);

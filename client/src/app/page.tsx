@@ -1,8 +1,8 @@
 "use client";
 
 import { AddRoomModal } from "@/components/AddRoomModal/AddRoomModal";
+import { AllRooms } from "@/components/AllRooms/AllRooms";
 import LoginModal from "@/components/AuthModal/AuthModal";
-import { ListOfRooms } from "@/components/ListOfRooms/ListOfRooms";
 import { Websocket } from "@/components/Websocket";
 
 export default function Home() {
@@ -13,6 +13,7 @@ export default function Home() {
       {/* <Websocket/> */}
       {/* <ListOfRooms/> */}
       {/* <AddRoomModal/> */}
+      <AllRooms/>
     </>
   );
 }

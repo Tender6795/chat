@@ -3,7 +3,7 @@ import { RootState } from "../store";
 import { sliceHelper } from "./sliceHelper";
 import { getAllRoom } from "@/api";
 
-interface Room {
+export interface Room {
   id: string;
   name: string;
   description?: string;
@@ -45,6 +45,6 @@ const allRoomsSlice = createSlice({
 });
 
 
-export const selectCurrentUser = (state: RootState) => state.currentUser.user;
+export const selectAllRooms = (state: RootState) => state.allRooms;
 
 export default allRoomsSlice.reducer;

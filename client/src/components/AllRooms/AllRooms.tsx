@@ -1,22 +1,21 @@
 import { getAllRoom } from "@/api";
 import { IRoom } from "@/interfaces/rooms.interface";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  Room,
+  fetchAllRooms,
+  selectAllRooms,
+} from "@/store/slices/allRoomsSlice";
 import React, { useEffect, useState } from "react";
 
-export const ListOfRooms = () => {
-  const [rooms, setRooms] = useState<IRoom[]>([]);
-
+export const AllRooms = () => {
+  // const [rooms, setRooms] = useState<IRoom[]>([]);
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    getAllRooms();
+    dispatch(fetchAllRooms());
   }, []);
 
-  const getAllRooms = async () => {
-    try {
-      const roomsFromServer = (await getAllRoom()) as IRoom[];
-      setRooms(roomsFromServer);
-    } catch (error) {
-      console.error("Error fetching rooms:", error);
-    }
-  };
+  const rooms = useAppSelector(selectAllRooms).rooms as Room[];
 
   return (
     <>

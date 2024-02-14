@@ -6,15 +6,20 @@ import { RoomCreate } from "@/interfaces/room-create.inteface";
 export const login = (body: Auth) =>
   post("/auth/login", body).then((res: any) => {
     localStorage.setItem("token", res.accessToken);
+    return res;
   });
-export const register = (body: Auth) => post("/auth/register", body);
+export const register = (body: Auth) =>
+  post("/auth/register", body).then((res: any) => {
+    localStorage.setItem("token", res.accessToken);
+    return res;
+  });
 export const google = () => get("/auth/google");
 
 // rooms
-export const getAllRoom =()=>get('/room')
-export const creatRoom =(body: RoomCreate)=>post('/room', body)
+export const getAllRoom = () => get("/room");
+export const creatRoom = (body: RoomCreate) => post("/room", body);
 
-//current user 
+//current user
 export const currentUser = () => post("/user/currentUser");
 
 // /* users requests */

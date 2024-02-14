@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Box, Button, Typography, Modal, TextField } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { google, login, register } from "@/api";
+import { google, register } from "@/api";
 import { signIn } from "next-auth/react";
 import { Auth } from "@/interfaces/auth.interface";
+import { useAppDispatch } from "@/store/hooks";
+import { fetchLogin, fetchRegistration } from "@/store/slices/userSlice";
 
 const style = {
   position: "absolute",
@@ -26,9 +28,10 @@ const validationSchema: Yup.Schema<Auth> = Yup.object({
     .required("Required"),
 });
 
-const LoginModal: React.FC = () => {
+const AuthModal: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [actionType, setActionType] = useState<string>("");
+  const dispatch = useAppDispatch();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -40,16 +43,16 @@ const LoginModal: React.FC = () => {
 
   const handleFormSubmit = async (values: Auth, _: any, actionType: string) => {
     if (actionType === "login") {
-      await login(values);
+      dispatch(fetchLogin(values));
     } else {
-      await register(values);
+      dispatch(fetchRegistration(values));
     }
     handleClose();
   };
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button onClick={handleOpen} color="inherit">Auth</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -133,4 +136,4 @@ const LoginModal: React.FC = () => {
   );
 };
 
-export default LoginModal;
+export default AuthModal;

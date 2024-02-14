@@ -1,8 +1,13 @@
 "use client";
 import React, { useEffect } from "react";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
-import { selectCurrentUser, fetchCurrentUser } from "@/store/slices/userSlice";
+import {
+  selectCurrentUser,
+  fetchCurrentUser,
+  logout,
+} from "@/store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import AuthModal from "../AuthModal/AuthModal";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -17,10 +22,16 @@ const Header = () => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          My Chat {JSON.stringify(currentUser)}
+          My Chat {currentUser?.id}
         </Typography>
         <Button color="inherit">Setting</Button>
-        <Button color="inherit">Auth</Button>
+        {!currentUser ? (
+          <AuthModal />
+        ) : (
+          <Button color="inherit" onClick={() => dispatch(logout())}>
+            Logout
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );

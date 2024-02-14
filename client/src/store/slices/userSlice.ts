@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { currentUser, login, register } from "@/api";
 import { Auth } from "@/interfaces/auth.interface";
+import { sliceHelper } from "./sliceHelper";
 
 interface User {
   id: string;
@@ -71,47 +72,27 @@ const currentUserSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchCurrentUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+    sliceHelper(builder, fetchCurrentUser).addCase(
+      fetchCurrentUser.fulfilled,
+      (state: any, action: any) => {
         state.loading = false;
         state.user = action.payload as User;
-      })
-      .addCase(fetchCurrentUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "";
-      });
-
-    builder
-      .addCase(fetchLogin.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchLogin.fulfilled, (state, action) => {
+      }
+    );
+    sliceHelper(builder, fetchLogin).addCase(
+      fetchLogin.fulfilled,
+      (state: any, action: any) => {
         state.loading = false;
         state.user = action.payload as User;
-      })
-      .addCase(fetchLogin.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "";
-      });
-
-    builder
-      .addCase(fetchRegistration.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchRegistration.fulfilled, (state, action) => {
+      }
+    );
+    sliceHelper(builder, fetchRegistration).addCase(
+      fetchRegistration.fulfilled,
+      (state: any, action: any) => {
         state.loading = false;
         state.user = action.payload as User;
-      })
-      .addCase(fetchRegistration.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "";
-      });
+      }
+    );
   },
 });
 

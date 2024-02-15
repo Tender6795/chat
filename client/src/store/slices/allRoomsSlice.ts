@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { sliceHelper } from "./sliceHelper";
-import { getAllRoom } from "@/api";
+import { createRoomApi, getAllRoom } from "@/api";
+import { RoomCreate } from "@/interfaces/room-create.inteface";
 
 export interface Room {
   id: string;
@@ -29,6 +30,18 @@ export const fetchAllRooms = createAsyncThunk("fetchAllRooms", async () => {
   }
 });
 
+export const createRoom = createAsyncThunk(
+  "createRoom",
+  async (body: RoomCreate) => {
+    try {
+      const room = await createRoomApi(body);
+      return room;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 const allRoomsSlice = createSlice({
   name: "allRoomsSlice",
   initialState,
@@ -41,9 +54,16 @@ const allRoomsSlice = createSlice({
         state.rooms = action.payload as Room[];
       }
     );
+
+    sliceHelper(builder, createRoom).addCase(
+      createRoom.fulfilled,
+      (state: any, action: any) => {
+        state.loading = false;
+        state.rooms = [...state.rooms, action.payload];
+      }
+    );
   },
 });
-
 
 export const selectAllRooms = (state: RootState) => state.allRooms;
 

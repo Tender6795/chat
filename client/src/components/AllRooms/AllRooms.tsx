@@ -7,25 +7,33 @@ import {
   selectAllRooms,
 } from "@/store/slices/allRoomsSlice";
 import React, { useEffect, useState } from "react";
+import { AddRoomModal } from "../AddRoomModal/AddRoomModal";
+import { selectCurrentUser } from "@/store/slices/userSlice";
 
 export const AllRooms = () => {
-  // const [rooms, setRooms] = useState<IRoom[]>([]);
   const dispatch = useAppDispatch();
+  const currentUser = useAppSelector(selectCurrentUser);
+
   useEffect(() => {
     dispatch(fetchAllRooms());
-  }, []);
+  }, [currentUser]);
 
   const rooms = useAppSelector(selectAllRooms).rooms as Room[];
 
   return (
     <>
-      {rooms.map((room) => (
-        <div key={room.id}>
-          <div>{room.name}</div>
-          <div>{room.description}</div>
-          <div>{room.creatorId}</div>
-        </div>
-      ))}
+      {currentUser && (
+        <>
+          <AddRoomModal />
+          {rooms.map((room) => (
+            <div key={room.id}>
+              <div>{room.name}</div>
+              <div>{room.description}</div>
+              <div>{room.creatorId}</div>
+            </div>
+          ))}
+        </>
+      )}
     </>
   );
 };

@@ -3,8 +3,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Box, Button, Typography, Modal, TextField } from "@mui/material";
 import { RoomCreate } from "@/interfaces/room-create.inteface";
-import { creatRoom } from "@/api";
-
+import { useAppDispatch } from "@/store/hooks";
+import { createRoom } from "@/store/slices/allRoomsSlice";
 
 const style = {
   position: "absolute",
@@ -27,12 +27,16 @@ export const AddRoomModal = () => {
   const [open, setOpen] = useState<boolean>(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const dispatch = useAppDispatch();
 
-
+  const hanldeAddRoom = (values: RoomCreate) => {
+    dispatch(createRoom(values));
+    handleClose();
+  };
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button onClick={handleOpen}>Create room</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -41,15 +45,12 @@ export const AddRoomModal = () => {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Auth
+            Add room
           </Typography>
           <Formik
             initialValues={{ name: "", description: "" }}
             validationSchema={validationSchema}
-            onSubmit={(values,  actions) => {
-                creatRoom(values)
-                actions.setSubmitting(false);
-            }}
+            onSubmit={hanldeAddRoom}
           >
             {({ isSubmitting }) => (
               <Form>

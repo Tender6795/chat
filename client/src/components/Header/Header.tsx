@@ -22,7 +22,7 @@ const Header = () => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          My Chat {currentUser?.id}
+          My Chat: {currentUser?.email}
         </Typography>
         <Button color="inherit">Setting</Button>
         {!currentUser ? (

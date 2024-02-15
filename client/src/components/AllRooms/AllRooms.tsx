@@ -24,13 +24,8 @@ export const AllRooms = () => {
       {currentUser && (
         <>
           <AddRoomModal />
-          {rooms.map((room) => (
-            // <div key={room.id}>
-            //   <div>{room.name}</div>
-            //   <div>{room.description}</div>
-            //   <div>{room.creatorId}</div>
-            // </div>
-            <Room room={room} key={room.id}/>
+          {rooms.map((room,index) => (
+            <Room room={room} key={room.id} index={index}/>
           ))}
         </>
       )}

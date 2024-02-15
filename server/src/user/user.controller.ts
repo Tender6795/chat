@@ -39,7 +39,10 @@ export class UserController {
   @Get()
   async findAllUsers() {
     const users = await this.userService.findAllUsers();
-    return users.map((user) => new UserResponce(user));
+    return users.map((user) => {
+      delete user.password;
+      return user;
+    });
   }
 
   // test

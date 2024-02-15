@@ -23,5 +23,6 @@ export const createRoomApi = (body: RoomCreate) => post("/room", body);
 export const currentUser = () => post("/user/currentUser");
 
 // /* users requests */
+export const getAllUSers = ()=> get('/user')
 // export const updateUser = (body) => patch(`/user/${body.id}`, body.data);
 // export const getUserByEmail = (body) => get(`/user/email/${body}`);

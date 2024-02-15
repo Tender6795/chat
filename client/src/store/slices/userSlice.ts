@@ -1,17 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { currentUser, login, register } from "@/api";
-import { Auth } from "@/interfaces/auth.interface";
+import { IAuth, IUser } from "@/interfaces/auth.interface";
 import { sliceHelper } from "./sliceHelper";
 
-interface User {
-  id: string;
-  email: string;
-  roles: string;
-}
+
 
 interface CurrentUserState {
-  user: User | null;
+  user: IUser | null;
   loading: boolean;
   error: string | null;
 }
@@ -36,7 +32,7 @@ export const fetchCurrentUser = createAsyncThunk(
 
 export const fetchLogin = createAsyncThunk(
   "login",
-  async (body: Auth) => {
+  async (body: IAuth) => {
     try {
       await login(body);
       const user = await currentUser();
@@ -49,7 +45,7 @@ export const fetchLogin = createAsyncThunk(
 
 export const fetchRegistration = createAsyncThunk(
   "register",
-  async (body: Auth) => {
+  async (body: IAuth) => {
     try {
       await register(body);
       const user = await currentUser();
@@ -76,21 +72,21 @@ const currentUserSlice = createSlice({
       fetchCurrentUser.fulfilled,
       (state: any, action: any) => {
         state.loading = false;
-        state.user = action.payload as User;
+        state.user = action.payload as IUser;
       }
     );
     sliceHelper(builder, fetchLogin).addCase(
       fetchLogin.fulfilled,
       (state: any, action: any) => {
         state.loading = false;
-        state.user = action.payload as User;
+        state.user = action.payload as IUser;
       }
     );
     sliceHelper(builder, fetchRegistration).addCase(
       fetchRegistration.fulfilled,
       (state: any, action: any) => {
         state.loading = false;
-        state.user = action.payload as User;
+        state.user = action.payload as IUser;
       }
     );
   },

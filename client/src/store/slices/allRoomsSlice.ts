@@ -3,15 +3,11 @@ import { RootState } from "../store";
 import { sliceHelper } from "./sliceHelper";
 import { createRoomApi, getAllRoom } from "@/api";
 import { RoomCreate } from "@/interfaces/room-create.inteface";
+import { IRoom } from "@/interfaces/rooms.interface";
 
-export interface Room {
-  id: string;
-  name: string;
-  description?: string;
-  creatorId: string;
-}
+
 interface RoomsState {
-  rooms: Room[] | [];
+  rooms: IRoom[] | [];
   loading: boolean;
   error: string | null;
 }
@@ -51,7 +47,7 @@ const allRoomsSlice = createSlice({
       fetchAllRooms.fulfilled,
       (state: any, action: any) => {
         state.loading = false;
-        state.rooms = action.payload as Room[];
+        state.rooms = action.payload as IRoom[];
       }
     );
 

@@ -1,14 +1,14 @@
-import { Auth } from "@/interfaces/auth.interface";
+import { IAuth } from "@/interfaces/auth.interface";
 import { get, post, patch, httpDelete } from "./axios";
 import { RoomCreate } from "@/interfaces/room-create.inteface";
 
 /* auth requests */
-export const login = (body: Auth) =>
+export const login = (body: IAuth) =>
   post("/auth/login", body).then((res: any) => {
     localStorage.setItem("token", res.accessToken);
     return res;
   });
-export const register = (body: Auth) =>
+export const register = (body: IAuth) =>
   post("/auth/register", body).then((res: any) => {
     localStorage.setItem("token", res.accessToken);
     return res;

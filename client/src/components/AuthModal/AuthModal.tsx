@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { google, register } from "@/api";
 import { signIn } from "next-auth/react";
-import { Auth } from "@/interfaces/auth.interface";
+import { IAuth } from "@/interfaces/auth.interface";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchLogin, fetchRegistration } from "@/store/slices/userSlice";
 
@@ -21,7 +21,7 @@ const style = {
   p: 4,
 };
 
-const validationSchema: Yup.Schema<Auth> = Yup.object({
+const validationSchema: Yup.Schema<IAuth> = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
@@ -41,7 +41,11 @@ const AuthModal: React.FC = () => {
     signIn("google");
   };
 
-  const handleFormSubmit = async (values: Auth, _: any, actionType: string) => {
+  const handleFormSubmit = async (
+    values: IAuth,
+    _: any,
+    actionType: string
+  ) => {
     if (actionType === "login") {
       dispatch(fetchLogin(values));
     } else {
@@ -52,7 +56,9 @@ const AuthModal: React.FC = () => {
 
   return (
     <div>
-      <Button onClick={handleOpen} color="inherit">Auth</Button>
+      <Button onClick={handleOpen} color="inherit">
+        Auth
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}

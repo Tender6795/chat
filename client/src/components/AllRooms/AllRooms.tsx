@@ -1,14 +1,13 @@
-import { getAllRoom } from "@/api";
 import { IRoom } from "@/interfaces/rooms.interface";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  Room,
   fetchAllRooms,
   selectAllRooms,
 } from "@/store/slices/allRoomsSlice";
 import React, { useEffect, useState } from "react";
 import { AddRoomModal } from "../AddRoomModal/AddRoomModal";
 import { selectCurrentUser } from "@/store/slices/userSlice";
+import Room from "../Room/Room";
 
 export const AllRooms = () => {
   const dispatch = useAppDispatch();
@@ -18,7 +17,7 @@ export const AllRooms = () => {
     dispatch(fetchAllRooms());
   }, [currentUser]);
 
-  const rooms = useAppSelector(selectAllRooms).rooms as Room[];
+  const rooms = useAppSelector(selectAllRooms).rooms as IRoom[];
 
   return (
     <>
@@ -26,11 +25,12 @@ export const AllRooms = () => {
         <>
           <AddRoomModal />
           {rooms.map((room) => (
-            <div key={room.id}>
-              <div>{room.name}</div>
-              <div>{room.description}</div>
-              <div>{room.creatorId}</div>
-            </div>
+            // <div key={room.id}>
+            //   <div>{room.name}</div>
+            //   <div>{room.description}</div>
+            //   <div>{room.creatorId}</div>
+            // </div>
+            <Room room={room} key={room.id}/>
           ))}
         </>
       )}

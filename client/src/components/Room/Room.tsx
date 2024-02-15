@@ -1,7 +1,12 @@
-import React from 'react'
+import React from "react";
+import { IRoom } from "@/interfaces/rooms.interface";
 
-export const Room = () => {
-  return (
-    <div>Room</div>
-  )
+interface RoomProps {
+  room: IRoom;
 }
+
+const Room: React.FC<RoomProps> = ({ room }) => {
+  return <div>{room.name}</div>;
+};
+
+export default Room;

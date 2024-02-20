@@ -1,0 +1,10 @@
+.title {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  font-family: "__Roboto_42e952", "__Roboto_Fallback_42e952";
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: #1976d2;
+}

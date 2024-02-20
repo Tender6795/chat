@@ -60,7 +60,7 @@ const User: React.FC<UserProps> = ({
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "center" }}>
-          <Button size="small">Invite</Button>
+          <Button size="small">Chating </Button>
         </CardActions>
       </Card>
     </motion.div>

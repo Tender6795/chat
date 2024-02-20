@@ -1,0 +1,7 @@
+.scrollContainer {
+  height: calc(100vh - 64px);
+  overflow: auto; /* Или overflow: scroll; */
+}
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}

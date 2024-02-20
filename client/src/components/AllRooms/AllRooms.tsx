@@ -7,7 +7,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { AddRoomModal } from "../AddRoomModal/AddRoomModal";
 import { selectCurrentUser } from "@/store/slices/userSlice";
-import Room from "../Room/Room";
+import RoomCard from "../RoomCard/RoomCard";
 
 export const AllRooms = () => {
   const dispatch = useAppDispatch();
@@ -25,7 +25,7 @@ export const AllRooms = () => {
         <>
           <AddRoomModal />
           {rooms.map((room,index) => (
-            <Room room={room} key={room.id} index={index}/>
+            <RoomCard room={room} key={room.id} index={index}/>
           ))}
         </>
       )}

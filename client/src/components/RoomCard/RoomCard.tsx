@@ -14,7 +14,7 @@ interface RoomProps {
   index: number;
 }
 
-const Room: React.FC<RoomProps> = ({
+const RoomCard: React.FC<RoomProps> = ({
   room: { name, description },
   index,
 }) => {
@@ -28,7 +28,7 @@ const Room: React.FC<RoomProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.2 }} // Задержка для каждой карточки
+      transition={{ delay: index * 0.2 }} 
     >
       <Card
         sx={{
@@ -65,4 +65,4 @@ const Room: React.FC<RoomProps> = ({
   );
 };
 
-export default Room
+export default RoomCard

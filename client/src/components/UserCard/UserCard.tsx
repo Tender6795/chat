@@ -1,5 +1,4 @@
 import React from "react";
-import { IRoom } from "@/interfaces/rooms.interface";
 import { motion } from "framer-motion";
 import {
   Button,
@@ -15,22 +14,17 @@ interface UserProps {
   index: number;
 }
 
-const User: React.FC<UserProps> = ({
-  //   room,
+const UserCard: React.FC<UserProps> = ({
   user: { email, id },
   index,
 }) => {
   const truncatedId = id.length > 10 ? id.slice(0, 10) + "..." : id;
-  //   const truncatedDescription =
-  //     description && description.length > 60
-  //       ? description.slice(0, 60) + "..."
-  //       : "No description";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.2 }} // Задержка для каждой карточки
+      transition={{ delay: index * 0.2 }} 
     >
       <Card
         sx={{
@@ -67,4 +61,4 @@ const User: React.FC<UserProps> = ({
   );
 };
 
-export default User;
+export default UserCard;

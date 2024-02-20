@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { fetchAllUsers, selectAllUsers } from "@/store/slices/allUsersSlice";
 import { IUser } from "@/interfaces/auth.interface";
-import User from "../User/User";
+import UserCard from "../UserCard/UserCard";
 import style from './AllUsers.module.css'
 
 export const AllUsers = () => {
@@ -22,7 +22,7 @@ export const AllUsers = () => {
         <>
           <div className={style.title}>Users:</div>
           {users.map((user, index) => (
-            <User user={user} key={user.id} index={index} />
+            <UserCard user={user} key={user.id} index={index} />
           ))}
         </>
       )}

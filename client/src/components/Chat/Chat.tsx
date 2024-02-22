@@ -39,7 +39,7 @@ const Chat: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const room = useAppSelector(selectCurrentRoom);
-  
+
   const handleSendMessage = () => {
     // Логика отправки сообщения
   };
@@ -60,16 +60,19 @@ const Chat: React.FC = () => {
       {room && (
         <Box>
           <ChatContainer
+            key={room.id}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
+            exit={{ x: "-100%" }} // Анимация исчезновения влево
             transition={{ type: "spring", stiffness: 120 }}
           >
             {tmpMessages.map((msg, index) => (
-              <ChatMessage {...msg} key={index}/>
+              <ChatMessage {...msg} key={index} />
             ))}
-            <div ref={chatEndRef} /> {/* Добавили в конец чата для автоматической прокрутки */}
+            <div ref={chatEndRef} />{" "}
+            {/* Добавили в конец чата для автоматической прокрутки */}
           </ChatContainer>
-          <InputContainer>
+          <InputContainer >
             <InputField label="Enter your message..." variant="outlined" />
             <Button onClick={handleSendMessage}>Send</Button>
           </InputContainer>

@@ -59,8 +59,8 @@ const Chat: React.FC = () => {
   return (
     <Box>
       <ChatContainer>
-        {tmpMessages.map((msg) => (
-          <ChatMessage {...msg} />
+        {tmpMessages.map((msg, index) => (
+          <ChatMessage {...msg} key={index}/>
         ))}
       </ChatContainer>
       <InputContainer>

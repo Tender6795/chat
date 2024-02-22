@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import  currentUserSlice  from './slices/userSlice'
 import allRoomsSlice from './slices/allRoomsSlice'
 import allUsersSlice from './slices/allUsersSlice'
+import currentRoomSlice from './slices/currentRoomSlice'
 // ...
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     currentUser: currentUserSlice ,
     allRooms: allRoomsSlice,
     allUsers: allUsersSlice,
+    currentRoom: currentRoomSlice
   },
 })
 

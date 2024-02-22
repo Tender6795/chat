@@ -2,13 +2,10 @@ import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import React from "react";
 import styles from "./ChatMessage.module.css";
+import { IChatMessage } from "@/interfaces/current-chat.interface";
 
-interface ChatMessageProps {
-  text: string;
-  senderEmail: string;
-}
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ text, senderEmail }) => {
+const ChatMessage: React.FC<IChatMessage> = ({ text, senderEmail }) => {
   const currentUser = useAppSelector(selectCurrentUser);
   const isMine = senderEmail === currentUser?.email;
 

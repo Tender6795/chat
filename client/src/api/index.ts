@@ -18,7 +18,7 @@ export const google = () => get("/auth/google");
 // rooms
 export const getAllRoom = () => get("/room");
 export const createRoomApi = (body: RoomCreate) => post("/room", body);
-
+export const getCurrentRoom = (id: string) => get(`/room/${id}`);
 //current user
 export const currentUser = () => post("/user/currentUser");
 

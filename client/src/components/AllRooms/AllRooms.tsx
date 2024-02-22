@@ -12,7 +12,6 @@ export const AllRooms = () => {
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
   const rooms = useAppSelector(selectAllRooms).rooms as IRoom[];
-
   useEffect(() => {
     dispatch(fetchAllRooms());
   }, [dispatch, currentUser]);

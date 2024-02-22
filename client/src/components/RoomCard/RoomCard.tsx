@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IRoom } from "@/interfaces/rooms.interface";
 import { motion } from "framer-motion";
 import {
@@ -8,6 +8,8 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchCurrentRoom, selectCurrentRoom } from "@/store/slices/currentRoomSlice";
 
 interface RoomProps {
   room: IRoom;
@@ -15,7 +17,7 @@ interface RoomProps {
 }
 
 const RoomCard: React.FC<RoomProps> = ({
-  room: { name, description },
+  room: { name, description, id },
   index,
 }) => {
   const truncatedName = name.length > 10 ? name.slice(0, 10) + "..." : name;
@@ -24,15 +26,27 @@ const RoomCard: React.FC<RoomProps> = ({
       ? description.slice(0, 60) + "..."
       : "No description";
 
+  const dispatch = useAppDispatch();
+  const room = useAppSelector(selectCurrentRoom);
+
+
+  useEffect(()=>{
+    console.log(room);
+  },[room])
+
+  const handleOpen = () => {
+    dispatch(fetchCurrentRoom(id));
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.2 }} 
+      transition={{ delay: index * 0.2 }}
     >
       <Card
         sx={{
-          width: '100%',
+          width: "100%",
           borderRadius: 8,
           boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
           backgroundColor: "#E6F7FF",
@@ -58,11 +72,13 @@ const RoomCard: React.FC<RoomProps> = ({
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "center" }}>
-          <Button size="small">Invite</Button>
+          <Button size="small" onClick={handleOpen}>
+            Open
+          </Button>
         </CardActions>
       </Card>
     </motion.div>
   );
 };
 
-export default RoomCard
+export default RoomCard;

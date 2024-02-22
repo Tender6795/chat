@@ -37,9 +37,9 @@ export class UserController {
   }
 
   @Get()
-  async findAllUsers() {
+  async findAllUsers(@CurrentUser() currentUser: JwtPayload) {
     const users = await this.userService.findAllUsers();
-    return users.map((user) => {
+    return users.filter(usr=>usr.id!==currentUser.id).map((user) => {
       delete user.password;
       return user;
     });

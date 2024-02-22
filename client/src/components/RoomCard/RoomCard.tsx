@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { IRoom } from "@/interfaces/rooms.interface";
 import { motion } from "framer-motion";
 import {
@@ -9,7 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchCurrentRoom, selectCurrentRoom } from "@/store/slices/currentRoomSlice";
+import {
+  fetchCurrentRoom,
+} from "@/store/slices/currentRoomSlice";
 
 interface RoomProps {
   room: IRoom;
@@ -27,12 +29,6 @@ const RoomCard: React.FC<RoomProps> = ({
       : "No description";
 
   const dispatch = useAppDispatch();
-  const room = useAppSelector(selectCurrentRoom);
-
-
-  useEffect(()=>{
-    console.log(room);
-  },[room])
 
   const handleOpen = () => {
     dispatch(fetchCurrentRoom(id));

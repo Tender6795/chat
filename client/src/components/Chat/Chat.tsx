@@ -1,17 +1,12 @@
 import React, { useRef, useEffect } from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-} from "@mui/material";
+import { Box, TextField, Button } from "@mui/material";
 import { styled } from "@mui/system";
+import { motion } from "framer-motion";
 import ChatMessage from "../ChatMessage/ChatMessage";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { selectCurrentRoom } from "@/store/slices/currentRoomSlice";
 
-const ChatContainer = styled(Box)`
+const ChatContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   height: calc(100vh - 162px);
@@ -23,7 +18,7 @@ const ChatContainer = styled(Box)`
 const InputContainer = styled(Box)`
   display: flex;
   align-items: center;
-  width: 100%; /* Устанавливаем ширину 100% */
+  width: 100%;
 `;
 
 const InputField = styled(TextField)`
@@ -42,6 +37,9 @@ const Chat: React.FC = () => {
     scrollToBottom();
   }, []);
 
+  const dispatch = useAppDispatch();
+  const room = useAppSelector(selectCurrentRoom);
+  
   const handleSendMessage = () => {
     // Логика отправки сообщения
   };
@@ -56,18 +54,28 @@ const Chat: React.FC = () => {
       senderEmail: "test2@mail.com",
     },
   ];
+
   return (
-    <Box>
-      <ChatContainer>
-        {tmpMessages.map((msg, index) => (
-          <ChatMessage {...msg} key={index}/>
-        ))}
-      </ChatContainer>
-      <InputContainer>
-        <InputField label="Enter your message..." variant="outlined" />
-        <Button onClick={handleSendMessage}>Send</Button>
-      </InputContainer>
-    </Box>
+    <div>
+      {room && (
+        <Box>
+          <ChatContainer
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            transition={{ type: "spring", stiffness: 120 }}
+          >
+            {tmpMessages.map((msg, index) => (
+              <ChatMessage {...msg} key={index}/>
+            ))}
+            <div ref={chatEndRef} /> {/* Добавили в конец чата для автоматической прокрутки */}
+          </ChatContainer>
+          <InputContainer>
+            <InputField label="Enter your message..." variant="outlined" />
+            <Button onClick={handleSendMessage}>Send</Button>
+          </InputContainer>
+        </Box>
+      )}
+    </div>
   );
 };
 

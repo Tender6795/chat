@@ -12,12 +12,6 @@ export default function Home() {
   return (
     <>
       <Grid container spacing={2}>
-        {/* <Grid item xs={6} md={3}>
-          <AllRooms />
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <AllUsers />
-        </Grid> */}
         <Grid item xs={3} md={3}>
             <UsersAndRoomsTabs/>
         </Grid>

@@ -63,14 +63,13 @@ const Chat: React.FC = () => {
             key={room.id}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: "-100%" }} // Анимация исчезновения влево
-            transition={{ type: "spring", stiffness: 120 }}
+            exit={{ x: "-100%" }} 
+            transition={{ type: "spring", stiffness: 80 }}
           >
             {tmpMessages.map((msg, index) => (
               <ChatMessage {...msg} key={index} />
             ))}
             <div ref={chatEndRef} />{" "}
-            {/* Добавили в конец чата для автоматической прокрутки */}
           </ChatContainer>
           <InputContainer >
             <InputField label="Enter your message..." variant="outlined" />

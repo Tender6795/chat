@@ -2,7 +2,7 @@ import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import React from "react";
 import styles from "./ChatMessage.module.css";
-import { IChatMessage } from "@/interfaces/current-chat.interface";
+import { IChatMessage } from "@/interfaces/rooms.interface";
 
 
 const ChatMessage: React.FC<IChatMessage> = ({ text, senderEmail }) => {

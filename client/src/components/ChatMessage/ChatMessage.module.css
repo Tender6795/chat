@@ -1,0 +1,28 @@
+.chatMessage {
+  width: 80%;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mine {
+  align-self: flex-end;
+  background-color: #def7ec;
+}
+
+.other {
+  align-self: flex-start;
+  background-color: #f3f3f3;
+}
+
+.senderEmail {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.text {
+  color: #222;
+}

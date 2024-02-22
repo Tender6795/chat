@@ -1,12 +1,21 @@
-import React, { useRef, useEffect } from 'react';
-import { Box, TextField, Button, List, ListItem, ListItemText, Divider } from '@mui/material';
-import { styled } from '@mui/system';
+import React, { useRef, useEffect } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+} from "@mui/material";
+import { styled } from "@mui/system";
+import ChatMessage from "../ChatMessage/ChatMessage";
 
 const ChatContainer = styled(Box)`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 162px); 
-  border: 1px solid #ccc; 
+  height: calc(100vh - 162px);
+  border: 1px solid #ccc;
   overflow-y: auto;
   margin-top: 38px;
 `;
@@ -26,7 +35,7 @@ const Chat: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -37,20 +46,22 @@ const Chat: React.FC = () => {
     // Логика отправки сообщения
   };
 
+  const tmpMessages = [
+    {
+      text: " test message my",
+      senderEmail: "test@mail.com",
+    },
+    {
+      text: " test message not my",
+      senderEmail: "test2@mail.com",
+    },
+  ];
   return (
     <Box>
       <ChatContainer>
-        <List>
-          <ListItem>
-            <ListItemText primary="User 1" secondary="Hello there!" />
-          </ListItem>
-          <Divider variant="middle" />
-          <ListItem>
-            <ListItemText primary="User 2" secondary="Hi! How can I help you?" />
-          </ListItem>
-          {/* Добавьте больше сообщений здесь */}
-          <div ref={chatEndRef} />
-        </List>
+        {tmpMessages.map((msg) => (
+          <ChatMessage {...msg} />
+        ))}
       </ChatContainer>
       <InputContainer>
         <InputField label="Enter your message..." variant="outlined" />

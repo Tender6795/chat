@@ -32,7 +32,7 @@ const UserCard: React.FC<UserProps> = ({
           borderRadius: 8,
           boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
           backgroundColor: "#E6F7FF",
-          marginBottom: 5,
+          marginBottom: 4,
         }}
       >
         <CardContent>

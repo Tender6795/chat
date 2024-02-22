@@ -1,23 +1,27 @@
-import { Provider, Role, User } from "@prisma/client";
-import { Exclude } from "class-transformer";
+import { Provider, Role, User } from '@prisma/client';
+import { Exclude } from 'class-transformer';
 
-export class UserResponce implements User{
-    id: string;
-    email: string;
+export class UserResponce implements User {
+  id: string;
+  email: string;
 
-    @Exclude()
-    password: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
 
-    @Exclude()
-    createdAt: Date;
+  @Exclude()
+  password: string;
 
-    @Exclude()
-    provider: Provider;
+  @Exclude()
+  createdAt: Date;
 
-    updatedAt: Date;
-    roles: Role[];
+  @Exclude()
+  provider: Provider;
 
-    constructor(user : User){
-        Object.assign(this, user)
-    }
+  updatedAt: Date;
+  roles: Role[];
+
+  constructor(user: User) {
+    Object.assign(this, user);
+  }
 }

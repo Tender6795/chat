@@ -8,6 +8,7 @@ import {
 } from "@/store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import AuthModal from "../AuthModal/AuthModal";
+import { leave } from "@/store/slices/currentRoomSlice";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +19,10 @@ const Header = () => {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
 
+  const logoutHanlde =()=>{
+    dispatch(logout())
+    dispatch(leave())
+  }
   return (
     <AppBar position="static">
       <Toolbar>
@@ -28,7 +33,7 @@ const Header = () => {
         {!currentUser ? (
           <AuthModal />
         ) : (
-          <Button color="inherit" onClick={() => dispatch(logout())}>
+          <Button color="inherit" onClick={logoutHanlde}>
             Logout
           </Button>
         )}

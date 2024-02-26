@@ -76,25 +76,27 @@ export class UserController {
       }
 
       if (avatar) {
-        if (path.isAbsolute(currentUser.avatar)) {
-          fs.unlinkSync(
-            path.join(__dirname, '..', 'avatars', currentUser.avatar),
-          );
+        if (currentUser.avatar && currentUser.avatar.startsWith('http://localhost:5000/avatars/')) {
+            const avatarFileName = currentUser.avatar.split('/').pop(); 
+            const avatarFilePath = path.join(__dirname, '..', 'avatars', avatarFileName);
+            
+            if (fs.existsSync(avatarFilePath)) {
+                fs.unlinkSync(avatarFilePath); 
+            }
         }
-
+    
         const avatarName = avatar.originalname;
         const avatarPath = path.join(__dirname, '..', 'avatars', avatarName);
         fs.writeFileSync(avatarPath, avatar.buffer);
-
-        currentUser.avatar = "http://localhost:5000/avatars/"+avatarName;
-      }
+    
+        currentUser.avatar = "http://localhost:5000/avatars/" + avatarName;
+    }
 
       currentUser.firstName = body.firstName;
       currentUser.lastName = body.lastName;
 
       return new UserResponce(await this.userService.update(currentUser));
     } catch (error) {
-      console.error('updateUser====', error);
       throw new BadRequestException('Error updating user');
     }
   }

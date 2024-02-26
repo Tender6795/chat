@@ -81,16 +81,11 @@ export class UserService {
     return await this.prismaService.user.findMany();
   }
   async update(user) {
-    try {
-      return await this.prismaService.user.update({
-        where: {
-          id: user.id,
-        },
-        data: user,
-      });
-    } catch (error) {
-      console.log('update====', error);
-    }
-   
+    return await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: user,
+    });
   }
 }

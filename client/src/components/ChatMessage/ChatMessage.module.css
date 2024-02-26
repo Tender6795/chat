@@ -18,9 +18,22 @@
   background-color: #f3f3f3;
 }
 
-.senderEmail {
-  font-weight: bold;
+.userInfo {
+  display: flex;
+  align-items: center;
   margin-bottom: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.name {
+  font-weight: bold;
 }
 
 .text {

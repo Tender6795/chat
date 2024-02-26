@@ -17,4 +17,8 @@ export interface IRooms {
 export interface IChatMessage {
   text: string;
   senderEmail: string;
+  avatar: string;
+  firstName: string;
+  lastName: string;
+  senderId?: string;
 }

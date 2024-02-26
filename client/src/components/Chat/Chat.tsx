@@ -47,11 +47,17 @@ const Chat: React.FC = () => {
   const tmpMessages = [
     {
       text: " test message my",
-      senderEmail: "test@mail.com",
+      senderEmail: "test33@mail.com",
+      avatar: "https://cs14.pikabu.ru/post_img/big/2023/02/13/8/1676296367166243426.png",
+      firstName: "test",
+      lastName: "test",
     },
     {
       text: " test message not my",
       senderEmail: "test2@mail.com",
+      avatar: "https://cs14.pikabu.ru/post_img/big/2023/02/13/8/1676296367166243426.png",
+      firstName: "test",
+      lastName: "test",
     },
   ];
 
@@ -63,7 +69,7 @@ const Chat: React.FC = () => {
             key={room.id}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: "-100%" }} 
+            exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 80 }}
           >
             {tmpMessages.map((msg, index) => (
@@ -71,7 +77,7 @@ const Chat: React.FC = () => {
             ))}
             <div ref={chatEndRef} />{" "}
           </ChatContainer>
-          <InputContainer >
+          <InputContainer>
             <InputField label="Enter your message..." variant="outlined" />
             <Button onClick={handleSendMessage}>Send</Button>
           </InputContainer>

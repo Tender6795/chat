@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["cs14.pikabu.ru"],
+    domains: ["cs14.pikabu.ru","localhost"],
     remotePatterns: [
       {
         protocol: "https",

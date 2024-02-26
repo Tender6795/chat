@@ -30,6 +30,8 @@ const SettingsModal: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
+  const [selectedAvatar, setSelectedAvatar] = useState<File | null>(null);
+
   const { avatar, lastName, firstName } = currentUser as IUser;
 
   const handleOpen = () => setOpen(true);
@@ -37,10 +39,12 @@ const SettingsModal: React.FC = () => {
 
   const handleFormSubmit = async (values: IUpdateUser) => {
     const formData = new FormData();
-    formData.append('avatar', values.avatar);
-    formData.append('firstName', values.firstName);
-    formData.append('lastName', values.lastName);
-    dispatch(fetchUpdate(formData))
+    if (selectedAvatar) {
+      formData.append("avatar", selectedAvatar);
+    }
+    formData.append("firstName", values.firstName);
+    formData.append("lastName", values.lastName);
+    dispatch(fetchUpdate(formData));
     handleClose();
   };
 
@@ -118,6 +122,7 @@ const SettingsModal: React.FC = () => {
                             "avatar",
                             URL.createObjectURL(event.currentTarget.files[0])
                           );
+                          setSelectedAvatar(event.currentTarget.files[0]);
                         }
                       }}
                       style={{ display: "none" }}

@@ -28,7 +28,7 @@ export class UserService {
         roles: ['USER'],
         avatar: user.avatar,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
       },
     });
   }
@@ -79,5 +79,18 @@ export class UserService {
 
   async findAllUsers() {
     return await this.prismaService.user.findMany();
+  }
+  async update(user) {
+    try {
+      return await this.prismaService.user.update({
+        where: {
+          id: user.id,
+        },
+        data: user,
+      });
+    } catch (error) {
+      console.log('update====', error);
+    }
+   
   }
 }

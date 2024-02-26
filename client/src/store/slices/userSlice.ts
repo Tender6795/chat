@@ -50,9 +50,7 @@ export const fetchRegistration = createAsyncThunk(
 
 export const fetchUpdate = createAsyncThunk("update", async (formData: any) => {
   try {
-    await updateUser(formData); //TODO
-    const user = await currentUser();
-    return user;
+    return await updateUser(formData);
   } catch (error) {
     throw error;
   }

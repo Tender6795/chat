@@ -9,14 +9,18 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   UseGuards,
+  Patch,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserResponce } from './responses';
-import { CurrentUser, Roles } from '@common/decorators';
+import { CurrentUser } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
-import { RolesGuard } from '@auth/guards/role.guard';
-import { Role } from '@prisma/client';
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdateUserDto } from './interfaces';
+import * as fs from 'fs';
+import * as path from 'path';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -39,10 +43,12 @@ export class UserController {
   @Get()
   async findAllUsers(@CurrentUser() currentUser: JwtPayload) {
     const users = await this.userService.findAllUsers();
-    return users.filter(usr=>usr.id!==currentUser.id).map((user) => {
-      delete user.password;
-      return user;
-    });
+    return users
+      .filter((usr) => usr.id !== currentUser.id)
+      .map((user) => {
+        delete user.password;
+        return user;
+      });
   }
 
   // test
@@ -51,5 +57,45 @@ export class UserController {
   @Post('currentUser')
   currentUser(@CurrentUser() user: JwtPayload) {
     return user;
+  }
+
+  @Patch('currentUser')
+  @UseInterceptors(FileInterceptor('avatar'))
+  async updateUser(
+    @CurrentUser() user: JwtPayload,
+    @UploadedFile() avatar: Express.Multer.File,
+    @Body() body: UpdateUserDto,
+  ) {
+    try {
+      console.log({avatar});
+      console.log({body});
+      const currentUser = await this.userService.findOne(user.id);
+
+      if (!currentUser) {
+        throw new BadRequestException('User not found');
+      }
+
+      if (avatar) {
+        if (path.isAbsolute(currentUser.avatar)) {
+          fs.unlinkSync(
+            path.join(__dirname, '..', 'avatars', currentUser.avatar),
+          );
+        }
+
+        const avatarName = avatar.originalname;
+        const avatarPath = path.join(__dirname, '..', 'avatars', avatarName);
+        fs.writeFileSync(avatarPath, avatar.buffer);
+
+        currentUser.avatar = "http://localhost:5000/avatars/"+avatarName;
+      }
+
+      currentUser.firstName = body.firstName;
+      currentUser.lastName = body.lastName;
+
+      return new UserResponce(await this.userService.update(currentUser));
+    } catch (error) {
+      console.error('updateUser====', error);
+      throw new BadRequestException('Error updating user');
+    }
   }
 }

@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Box, Button, Typography, Modal, TextField } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { IUpdateUser } from "@/interfaces/auth.interface";
-import { useAppDispatch } from "@/store/hooks";
+import { IUpdateUser, IUser } from "@/interfaces/auth.interface";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Image from "next/image";
+import { selectCurrentUser } from "@/store/slices/userSlice";
 
 const style = {
   position: "absolute",
@@ -28,6 +29,8 @@ const validationSchema: Yup.Schema<IUpdateUser> = Yup.object({
 const SettingsModal: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const currentUser = useAppSelector(selectCurrentUser);
+  const { avatar, lastName, firstName } = currentUser as IUser;
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -53,7 +56,11 @@ const SettingsModal: React.FC = () => {
             Settings
           </Typography>
           <Formik
-            initialValues={{ firstName: "", lastName: "", avatar: "" }}
+            initialValues={{
+              firstName: firstName || "",
+              lastName: lastName || "",
+              avatar: avatar || "",
+            }}
             validationSchema={validationSchema}
             onSubmit={(values) => handleFormSubmit(values)}
           >
@@ -61,11 +68,36 @@ const SettingsModal: React.FC = () => {
               <Form>
                 <div style={{ textAlign: "center" }}>
                   <label htmlFor="avatar">
-                    <div style={{ width: "100px", height: "100px", borderRadius: "50%", overflow: "hidden", margin: "0 auto", cursor: "pointer" }}>
+                    <div
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                        margin: "0 auto",
+                        cursor: "pointer",
+                      }}
+                    >
                       {values.avatar ? (
-                        <Image src={values.avatar} alt="Avatar" width={100} height={100} />
+                        <Image
+                          src={values.avatar}
+                          alt="Avatar"
+                          width={100}
+                          height={100}
+                        />
                       ) : (
-                        <div style={{ backgroundColor: "#ccc", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>Select Image</div>
+                        <div
+                          style={{
+                            backgroundColor: "#ccc",
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          Select Image
+                        </div>
                       )}
                     </div>
                     <input
@@ -74,8 +106,14 @@ const SettingsModal: React.FC = () => {
                       type="file"
                       accept="image/*"
                       onChange={(event) => {
-                        if (event.currentTarget.files && event.currentTarget.files.length > 0) {
-                          setFieldValue("avatar", URL.createObjectURL(event.currentTarget.files[0]));
+                        if (
+                          event.currentTarget.files &&
+                          event.currentTarget.files.length > 0
+                        ) {
+                          setFieldValue(
+                            "avatar",
+                            URL.createObjectURL(event.currentTarget.files[0])
+                          );
                         }
                       }}
                       style={{ display: "none" }}

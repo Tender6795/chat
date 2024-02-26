@@ -1,10 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { currentUser, login, register } from "@/api";
+import { currentUser, login, register, updateUser } from "@/api";
 import { IAuth, IUser } from "@/interfaces/auth.interface";
 import { sliceHelper } from "./sliceHelper";
-
-
 
 interface CurrentUserState {
   user: IUser | null;
@@ -18,30 +16,24 @@ const initialState: CurrentUserState = {
   error: null,
 };
 
-export const fetchCurrentUser = createAsyncThunk(
-  "currentUser",
-  async () => {
-    try {
-      const user = await currentUser();
-      return user;
-    } catch (error) {
-      throw error;
-    }
+export const fetchCurrentUser = createAsyncThunk("currentUser", async () => {
+  try {
+    const user = await currentUser();
+    return user;
+  } catch (error) {
+    throw error;
   }
-);
+});
 
-export const fetchLogin = createAsyncThunk(
-  "login",
-  async (body: IAuth) => {
-    try {
-      await login(body);
-      const user = await currentUser();
-      return user;
-    } catch (error) {
-      throw error;
-    }
+export const fetchLogin = createAsyncThunk("login", async (body: IAuth) => {
+  try {
+    await login(body);
+    const user = await currentUser();
+    return user;
+  } catch (error) {
+    throw error;
   }
-);
+});
 
 export const fetchRegistration = createAsyncThunk(
   "register",
@@ -55,6 +47,16 @@ export const fetchRegistration = createAsyncThunk(
     }
   }
 );
+
+export const fetchUpdate = createAsyncThunk("update", async (formData: any) => {
+  try {
+    await updateUser(formData); //TODO
+    const user = await currentUser();
+    return user;
+  } catch (error) {
+    throw error;
+  }
+});
 
 const currentUserSlice = createSlice({
   name: "currentUser",
@@ -84,6 +86,14 @@ const currentUserSlice = createSlice({
     );
     sliceHelper(builder, fetchRegistration).addCase(
       fetchRegistration.fulfilled,
+      (state: any, action: any) => {
+        state.loading = false;
+        state.user = action.payload as IUser;
+      }
+    );
+
+    sliceHelper(builder, fetchUpdate).addCase(
+      fetchUpdate.fulfilled,
       (state: any, action: any) => {
         state.loading = false;
         state.user = action.payload as IUser;

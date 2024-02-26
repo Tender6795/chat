@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { IUpdateUser, IUser } from "@/interfaces/auth.interface";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Image from "next/image";
-import { selectCurrentUser } from "@/store/slices/userSlice";
+import { fetchUpdate, selectCurrentUser } from "@/store/slices/userSlice";
 
 const style = {
   position: "absolute",
@@ -36,7 +36,11 @@ const SettingsModal: React.FC = () => {
   const handleClose = () => setOpen(false);
 
   const handleFormSubmit = async (values: IUpdateUser) => {
-    // Отправка данных на сервер или другие операции с данными
+    const formData = new FormData();
+    formData.append('avatar', values.avatar);
+    formData.append('firstName', values.firstName);
+    formData.append('lastName', values.lastName);
+    dispatch(fetchUpdate(formData))
     handleClose();
   };
 

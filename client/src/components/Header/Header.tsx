@@ -13,22 +13,26 @@ import { leave } from "@/store/slices/currentRoomSlice";
 const Header = () => {
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
-
-  // Загрузка текущего пользователя при монтировании компонента
   useEffect(() => {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
 
-  const logoutHanlde =()=>{
-    dispatch(logout())
-    dispatch(leave())
-  }
+  const logoutHanlde = () => {
+    dispatch(logout());
+    dispatch(leave());
+  };
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          My Chat: {currentUser?.email}
-        </Typography>
+        {!currentUser?.firstName ? (
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            My Chat
+          </Typography>
+        ) : (
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Hello {currentUser!.firstName +' '+ currentUser!.lastName}
+          </Typography>
+        )}
         <Button color="inherit">Setting</Button>
         {!currentUser ? (
           <AuthModal />

@@ -6,4 +6,7 @@ export interface IUser {
   id: string;
   email: string;
   roles: string;
+  avatar?: string;
+  firstName?: string;
+  lastName?: string;
 }

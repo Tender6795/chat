@@ -10,3 +10,8 @@ export interface IUser {
   firstName?: string;
   lastName?: string;
 }
+export interface IUpdateUser {
+  avatar: string;
+  firstName: string;
+  lastName: string;
+}

@@ -9,6 +9,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import AuthModal from "../AuthModal/AuthModal";
 import { leave } from "@/store/slices/currentRoomSlice";
+import SettingsModal from "../SettingModal/SettingModal";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -30,16 +31,19 @@ const Header = () => {
           </Typography>
         ) : (
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Hello {currentUser!.firstName +' '+ currentUser!.lastName}
+            Hello {currentUser!.firstName + " " + currentUser!.lastName}
           </Typography>
         )}
-        <Button color="inherit">Setting</Button>
+        {/* <Button color="inherit">Setting</Button> */}
         {!currentUser ? (
           <AuthModal />
         ) : (
-          <Button color="inherit" onClick={logoutHanlde}>
-            Logout
-          </Button>
+          <>
+            <SettingsModal />
+            <Button color="inherit" onClick={logoutHanlde}>
+              Logout
+            </Button>
+          </>
         )}
       </Toolbar>
     </AppBar>

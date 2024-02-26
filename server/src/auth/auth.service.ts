@@ -16,7 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@prisma/prisma.service';
 import { v4 } from 'uuid';
 import { add } from 'date-fns';
-
+import { generateNewName } from './helper';
 @Injectable()
 export class AuthService {
   private logger = new Logger(AuthService.name);
@@ -36,7 +36,13 @@ export class AuthService {
     if (user) {
       throw new ConflictException('User with this email already exists');
     }
-    return this.userService.save(dto).catch((err) => {
+    const newUser = {
+      ...dto,
+      avatar:
+        'https://cs14.pikabu.ru/post_img/big/2023/02/13/8/1676296367166243426.png',
+      ...generateNewName(),
+    };
+    return this.userService.save(newUser).catch((err) => {
       this.logger.error(err);
       return null;
     });
@@ -126,6 +132,7 @@ export class AuthService {
     if (userExist) {
       return this.generateTokens(userExist, agent);
     }
+    generateNewName;
     const user = await this.userService
       .save({ email, provider: Provider.GOOGLE })
       .catch((err) => {

@@ -7,6 +7,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { ConfigService } from '@nestjs/config';
 import { convertToSecondsUtil } from '@common/utils';
+import { first } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -25,6 +26,9 @@ export class UserService {
         email: user.email,
         password: hashedPassword,
         roles: ['USER'],
+        avatar: user.avatar,
+        firstName: user.firstName,
+        lastName: user.lastName
       },
     });
   }

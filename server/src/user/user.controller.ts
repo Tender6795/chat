@@ -21,6 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateUserDto } from './interfaces';
 import * as fs from 'fs';
 import * as path from 'path';
+import { resizeAndOptimizeImage } from './helper';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -60,44 +61,37 @@ export class UserController {
   }
 
   @Patch('currentUser')
-  @UseInterceptors(FileInterceptor('avatar'))
-  async updateUser(
-    @CurrentUser() user: JwtPayload,
-    @UploadedFile() avatar: Express.Multer.File,
-    @Body() body: UpdateUserDto,
-  ) {
-    try {
-      console.log({avatar});
-      console.log({body});
-      const currentUser = await this.userService.findOne(user.id);
+@UseInterceptors(FileInterceptor('avatar'))
+async updateUser(
+  @CurrentUser() user: JwtPayload,
+  @UploadedFile() avatar: Express.Multer.File,
+  @Body() body: UpdateUserDto,
+) {
+  try {
+    console.log({ avatar });
+    console.log({ body });
+    const currentUser = await this.userService.findOne(user.id);
 
-      if (!currentUser) {
-        throw new BadRequestException('User not found');
-      }
-
-      if (avatar) {
-        if (currentUser.avatar && currentUser.avatar.startsWith('http://localhost:5000/avatars/')) {
-            const avatarFileName = currentUser.avatar.split('/').pop(); 
-            const avatarFilePath = path.join(__dirname, '..', 'avatars', avatarFileName);
-            
-            if (fs.existsSync(avatarFilePath)) {
-                fs.unlinkSync(avatarFilePath); 
-            }
-        }
-    
-        const avatarName = avatar.originalname;
-        const avatarPath = path.join(__dirname, '..', 'avatars', avatarName);
-        fs.writeFileSync(avatarPath, avatar.buffer);
-    
-        currentUser.avatar = "http://localhost:5000/avatars/" + avatarName;
+    if (!currentUser) {
+      throw new BadRequestException('User not found');
     }
 
-      currentUser.firstName = body.firstName;
-      currentUser.lastName = body.lastName;
+    if (avatar) {
+      const optimizedImageBuffer = await resizeAndOptimizeImage(avatar.buffer);
 
-      return new UserResponce(await this.userService.update(currentUser));
-    } catch (error) {
-      throw new BadRequestException('Error updating user');
+      const avatarName = avatar.originalname;
+      const avatarPath = path.join(__dirname, '..', 'avatars', avatarName);
+      fs.writeFileSync(avatarPath, optimizedImageBuffer);
+
+      currentUser.avatar = "http://localhost:5000/avatars/" + avatarName;
     }
+
+    currentUser.firstName = body.firstName;
+    currentUser.lastName = body.lastName;
+
+    return new UserResponce(await this.userService.update(currentUser));
+  } catch (error) {
+    throw new BadRequestException('Error updating user');
   }
+}
 }

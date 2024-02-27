@@ -70,8 +70,6 @@ export class UserController {
     @Body() body: UpdateUserDto,
   ) {
     try {
-      console.log({ avatar });
-      console.log({ body });
       const currentUser = await this.userService.findOne(user.id);
   
       if (!currentUser) {

@@ -112,7 +112,7 @@ const SettingsModal: React.FC = () => {
                       id="avatar"
                       name="avatar"
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg, image/png"
                       onChange={(event) => {
                         if (
                           event.currentTarget.files &&

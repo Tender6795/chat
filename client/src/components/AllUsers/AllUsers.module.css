@@ -10,8 +10,8 @@
 }
 
 .scrollContainer {
-  height: calc(100vh - 64px);
-  overflow: auto; /* Или overflow: scroll; */
+  max-height: calc(100vh - 120px);
+  overflow: auto;
 }
 .scrollContainer::-webkit-scrollbar {
   display: none;

@@ -20,7 +20,6 @@ export const AllUsers = () => {
     <div>
       {currentUser && (
         <>
-          <div className={style.title}>Users:</div>
           <div className={style.scrollContainer}>
             {users.map((user, index) => (
               <UserCard user={user} key={user.id} index={index} />

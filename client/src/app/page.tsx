@@ -12,10 +12,10 @@ export default function Home() {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={3} md={3}>
-            <UsersAndRoomsTabs/>
+        <Grid item style={{ width: "455px", flex: "none" }}>
+          <UsersAndRoomsTabs />
         </Grid>
-        <Grid item xs={12} md={9}>
+        <Grid item style={{ flex: "auto" }}>
           <Chat />
         </Grid>
       </Grid>

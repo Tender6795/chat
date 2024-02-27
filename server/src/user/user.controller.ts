@@ -60,36 +60,52 @@ export class UserController {
     return user;
   }
 
+
+  
   @Patch('currentUser')
-@UseInterceptors(FileInterceptor('avatar'))
-async updateUser(
-  @CurrentUser() user: JwtPayload,
-  @UploadedFile() avatar: Express.Multer.File,
-  @Body() body: UpdateUserDto,
-) {
-  try {
-    const currentUser = await this.userService.findOne(user.id);
-
-    if (!currentUser) {
-      throw new BadRequestException('User not found');
+  @UseInterceptors(FileInterceptor('avatar'))
+  async updateUser(
+    @CurrentUser() user: JwtPayload,
+    @UploadedFile() avatar: Express.Multer.File,
+    @Body() body: UpdateUserDto,
+  ) {
+    try {
+      console.log({ avatar });
+      console.log({ body });
+      const currentUser = await this.userService.findOne(user.id);
+  
+      if (!currentUser) {
+        throw new BadRequestException('User not found');
+      }
+  
+      if (avatar) {
+        if (currentUser.avatar && currentUser.avatar.startsWith('http://localhost:5000/avatars/')) {
+          const avatarFileName = currentUser.avatar.split('/').pop();
+          const avatarFilePath = path.join(__dirname, '..', 'avatars', avatarFileName);
+          try {
+            fs.unlinkSync(avatarFilePath);
+          } catch (error) {
+            console.error('Error deleting file:', error);
+          }
+        }
+  
+        const optimizedImageBuffer = await resizeAndOptimizeImage(avatar.buffer);
+  
+        const avatarName = avatar.originalname;
+        const avatarPath = path.join(__dirname, '..', 'avatars', avatarName);
+        fs.writeFileSync(avatarPath, optimizedImageBuffer);
+  
+        currentUser.avatar = "http://localhost:5000/avatars/" + avatarName;
+      }
+  
+      currentUser.firstName = body.firstName;
+      currentUser.lastName = body.lastName;
+  
+      return new UserResponce(await this.userService.update(currentUser));
+    } catch (error) {
+      throw new BadRequestException('Error updating user');
     }
-
-    if (avatar) {
-      const optimizedImageBuffer = await resizeAndOptimizeImage(avatar.buffer);
-
-      const avatarName = avatar.originalname;
-      const avatarPath = path.join(__dirname, '..', 'avatars', avatarName);
-      fs.writeFileSync(avatarPath, optimizedImageBuffer);
-
-      currentUser.avatar = "http://localhost:5000/avatars/" + avatarName;
-    }
-
-    currentUser.firstName = body.firstName;
-    currentUser.lastName = body.lastName;
-
-    return new UserResponce(await this.userService.update(currentUser));
-  } catch (error) {
-    throw new BadRequestException('Error updating user');
   }
-}
+
+
 }

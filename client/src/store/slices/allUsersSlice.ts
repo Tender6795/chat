@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { sliceHelper } from "./sliceHelper";
-import { getAllUSers } from "@/api";
+import { getAllUsers } from "@/api";
 import { RoomCreate } from "@/interfaces/room-create.inteface";
 import { IRoom } from "@/interfaces/rooms.interface";
 import { IUser } from "@/interfaces/auth.interface";
@@ -19,7 +19,7 @@ const initialState: UsersState = {
 
 export const fetchAllUsers = createAsyncThunk("fetchAllUsers", async () => {
   try {
-    const users = await getAllUSers() as IUser[];
+    const users = await getAllUsers() as IUser[];
     return users;
   } catch (error) {
     throw error;

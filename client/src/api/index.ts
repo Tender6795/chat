@@ -24,6 +24,6 @@ export const getCurrentRoom = (id: string) => get(`/room/${id}`);
 export const currentUser = () => post("/user/currentUser");
 export const updateUser = (formData: any) => patch("/user/currentUser", formData);
 // /* users requests */
-export const getAllUSers = () => get("/user");
+export const getAllUsers = () => get("/user");
 // export const updateUser = (body) => patch(`/user/${body.id}`, body.data);
 // export const getUserByEmail = (body) => get(`/user/email/${body}`);

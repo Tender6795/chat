@@ -30,24 +30,24 @@ export class RoomService {
 
   async findAll(userId: string) {
     try {
-      const user = await this.prismaService.user.findUnique({
-        where: { id: userId },
-        include: {
-          createdRooms: true,
-          RoomUser: { include: { room: true } },
-        },
-      });
+        const user = await this.prismaService.user.findUnique({
+            where: { id: userId },
+            include: {
+                createdRooms: { include: { members: true } }, // Включаем информацию о членах в созданных комнатах
+                RoomUser: { include: { room: { include: { members: true } } } }, // Включаем информацию о членах в комнатах, где пользователь участвует
+            },
+        });
 
-      const createdRooms = user.createdRooms.map((room) => room);
-      const rooms = user.RoomUser.map((roomUser) => roomUser.room);
-      const groups = [...createdRooms, ...rooms];
+        const createdRooms = user.createdRooms.map((room) => room);
+        const rooms = user.RoomUser.map((roomUser) => roomUser.room);
+        const groups = [...createdRooms, ...rooms];
 
-      return groups;
+        return groups;
     } catch (error) {
-      console.error('Error fetching user rooms:', error);
-      throw new Error('Failed to fetch user rooms');
+        console.error('Error fetching user rooms:', error);
+        throw new Error('Failed to fetch user rooms');
     }
-  }
+}
 
   async findOne(roomId: string) {
     try {

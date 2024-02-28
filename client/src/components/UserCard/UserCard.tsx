@@ -10,8 +10,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import { IUser } from "@/interfaces/auth.interface";
-import { useAppSelector } from "@/store/hooks";
-import { selectAllRooms } from "@/store/slices/allRoomsSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { addUserToRoom, selectAllRooms } from "@/store/slices/allRoomsSlice";
 import { IRoom } from "@/interfaces/rooms.interface";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -31,6 +31,8 @@ const UserCard: React.FC<UserProps> = ({
   const [selectedRoom, setSelectedRoom] = useState(
     rooms.length > 0 ? rooms[0].id : ""
   );
+  const dispatch = useAppDispatch();
+
   const userName = firstName ? `${firstName} ${lastName}` : email;
 
   const handleRoomSelect = () => {
@@ -42,7 +44,11 @@ const UserCard: React.FC<UserProps> = ({
   };
 
   const handleConfirm = () => {
-    console.log({ selectedRoom });
+    if(!selectedRoom) {
+      setShowRoomSelect(false);
+      return
+    }
+    dispatch(addUserToRoom({ roomId: selectedRoom, userId: id }));
     setShowRoomSelect(false);
   };
 
@@ -108,11 +114,15 @@ const UserCard: React.FC<UserProps> = ({
                 onChange={(e) => setSelectedRoom(e.target.value)}
                 style={{ marginRight: "10px", minWidth: "200px" }}
               >
-                {rooms.filter(r => !r.members.some(member => member?.userId === id)).map((room) => (
-                  <MenuItem key={room.id} value={room.id}>
-                    {room.name}
-                  </MenuItem>
-                ))}
+                {rooms
+                  .filter(
+                    (r) => !r.members.some((member) => member?.userId === id)
+                  )
+                  .map((room) => (
+                    <MenuItem key={room.id} value={room.id}>
+                      {room.name}
+                    </MenuItem>
+                  ))}
               </Select>
               <Button onClick={handleConfirm} style={{ marginRight: "5px" }}>
                 <CheckIcon />

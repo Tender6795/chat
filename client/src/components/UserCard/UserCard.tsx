@@ -16,7 +16,6 @@ import { IRoom } from "@/interfaces/rooms.interface";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
-// import styles from './UserCard.module.css'
 
 interface UserProps {
   user: IUser;
@@ -109,7 +108,7 @@ const UserCard: React.FC<UserProps> = ({
                 onChange={(e) => setSelectedRoom(e.target.value)}
                 style={{ marginRight: "10px", minWidth: "200px" }}
               >
-                {rooms.map((room) => (
+                {rooms.filter(r => !r.members.some(member => member?.userId === id)).map((room) => (
                   <MenuItem key={room.id} value={room.id}>
                     {room.name}
                   </MenuItem>

@@ -4,7 +4,7 @@ export interface IRoom {
   id: string;
   name: string;
   description?: string;
-  members?: IUser[];
+  members: IMember[] | [];
   messages: IChatMessage[];
   creatorId: string;
   creator?: IUser;
@@ -21,4 +21,10 @@ export interface IChatMessage {
   firstName: string;
   lastName: string;
   senderId?: string;
+}
+
+export interface IMember {
+  id: string;
+  roomId: string;
+  userId: string;
 }

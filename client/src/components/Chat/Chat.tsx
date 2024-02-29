@@ -39,7 +39,7 @@ const Chat: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const room = useAppSelector(selectCurrentRoom);
-
+  
   const handleSendMessage = () => {
     // Логика отправки сообщения
   };

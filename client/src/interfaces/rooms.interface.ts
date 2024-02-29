@@ -7,7 +7,7 @@ export interface IRoom {
   members: IMember[] | [];
   messages: IChatMessage[];
   creatorId: string;
-  creator?: IUser;
+  creator?: Partial<IUser>;
 }
 
 export interface IRooms {
@@ -27,4 +27,5 @@ export interface IMember {
   id: string;
   roomId: string;
   userId: string;
+  user?: Partial<IUser>;
 }

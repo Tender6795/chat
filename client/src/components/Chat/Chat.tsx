@@ -1,10 +1,12 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Box, TextField, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import { motion } from "framer-motion";
 import ChatMessage from "../ChatMessage/ChatMessage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectCurrentRoom } from "@/store/slices/currentRoomSlice";
+import { ChatHeader } from "../ChatHeader/ChatHeader";
+import { IUser } from "@/interfaces/auth.interface";
 
 const ChatContainer = styled(motion.div)`
   display: flex;
@@ -39,7 +41,9 @@ const Chat: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const room = useAppSelector(selectCurrentRoom);
-  
+  const members = room?.members
+  const creator = room?.creator as Partial<IUser>
+
   const handleSendMessage = () => {
     // Логика отправки сообщения
   };
@@ -60,7 +64,15 @@ const Chat: React.FC = () => {
       lastName: "test",
     },
   ];
+  const [allUsers, setAllUsers] = useState<Partial<IUser>[]>([]);
 
+  useEffect(()=>{
+    if(!members|| !creator) return 
+    const allMembers = members?.map(member=>member.user) as Partial<IUser>[]
+    console.log({allMembers});
+    setAllUsers([...allMembers, creator ])
+  },[members, creator])
+  
   return (
     <div>
       {room && (
@@ -72,6 +84,7 @@ const Chat: React.FC = () => {
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 80 }}
           >
+            <ChatHeader users={allUsers} />
             {tmpMessages.map((msg, index) => (
               <ChatMessage {...msg} key={index} />
             ))}

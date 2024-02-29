@@ -74,7 +74,7 @@ const Chat: React.FC = () => {
   },[members, creator])
   
   return (
-    <div>
+    <div style={{marginRight:10}}>
       {room && (
         <Box>
           <ChatContainer
@@ -84,7 +84,7 @@ const Chat: React.FC = () => {
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 80 }}
           >
-            <ChatHeader users={allUsers} />
+            <ChatHeader users={allUsers} title={room.name}/>
             {tmpMessages.map((msg, index) => (
               <ChatMessage {...msg} key={index} />
             ))}

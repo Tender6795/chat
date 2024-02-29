@@ -34,14 +34,12 @@ export class MessageGateway implements OnModuleInit {
     @MessageBody() createMessageDto: CreateMessageDto,
     @CurrentUserWebsocet() user: JwtPayload,
   ) {
-    console.log('========111111111==========', createMessageDto);
-    console.log('========222222222==========', user);
 
     this.sever.emit('onMessage', {
       msg: 'New Message',
       content: createMessageDto,
     });
-    return this.messageService.create(createMessageDto);
+    return this.messageService.create(createMessageDto, user.id);
   }
 
   @SubscribeMessage('findAllMessage')

@@ -1,11 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { PrismaService } from '@prisma/prisma.service';
+import { Message } from '@prisma/client';
 
 @Injectable()
 export class MessageService {
-  create(createMessageDto: CreateMessageDto) {
-    return 'This action adds a new message';
+  constructor(private readonly prisma: PrismaService) {}
+  async create(createMessageDto: CreateMessageDto ,fromId: string): Promise<Message> {
+    try {
+      const createdMessage = await this.prisma.message.create({
+        data: {
+          ...createMessageDto,
+          fromId: fromId, 
+      },
+      });
+      return createdMessage;
+    } catch (error) {
+      console.error('Failed to create message:', error);
+      throw new Error('Failed to create message');
+    }
   }
 
   findAll() {

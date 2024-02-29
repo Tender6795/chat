@@ -30,16 +30,16 @@ export class MessageGateway implements OnModuleInit {
 
   // @Public() //TODO delete in future
   @SubscribeMessage('createMessage')
-  create(
+  async create(
     @MessageBody() createMessageDto: CreateMessageDto,
     @CurrentUserWebsocet() user: JwtPayload,
   ) {
+    await this.messageService.create(createMessageDto, user.id);
 
     this.sever.emit('onMessage', {
       msg: 'New Message',
       content: createMessageDto,
     });
-    return this.messageService.create(createMessageDto, user.id);
   }
 
   @SubscribeMessage('findAllMessage')

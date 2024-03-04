@@ -1,8 +1,9 @@
 import { Middleware, Dispatch, AnyAction } from '@reduxjs/toolkit';
 import { addMessage } from '@/store/slices/roomMessagesSlice';
 import { IMessage } from '@/interfaces/message.interface';
+import { Socket } from 'socket.io-client';
 
-type WebsocketMiddlewareCreator = (socket: WebSocket) => Middleware;
+type WebsocketMiddlewareCreator = (socket: Socket) => Middleware; 
 
 interface IncomingMessage {
   data: string;
@@ -10,23 +11,21 @@ interface IncomingMessage {
 
 type WebSocketHandler = (message: IncomingMessage) => void;
 
-const websocketMiddleware: WebsocketMiddlewareCreator = (socket: WebSocket) => {
+const websocketMiddleware: WebsocketMiddlewareCreator = (socket: Socket) => {
   let socketHandler: WebSocketHandler | null = null;
 
-  const middleware: Middleware = ({ dispatch }) => (next) => (action) => {
+  return ({ dispatch }) => (next) => (action) => {
     if (socketHandler === null) {
       socketHandler = (event) => {
         const message: IMessage = JSON.parse(event.data);
         dispatch(addMessage(message));
       };
 
-      socket.onmessage = socketHandler;
+      socket.on('message', socketHandler);
     }
 
     return next(action);
   };
-
-  return middleware;
 };
 
 export default websocketMiddleware;

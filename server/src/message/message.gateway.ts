@@ -11,10 +11,12 @@ import { Server } from 'socket.io';
 import { OnModuleInit } from '@nestjs/common';
 import { CurrentUserWebsocet } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
+import { from, Observable } from 'rxjs';
 
 @WebSocketGateway({
+  namespace: 'chat',
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: '*',
   },
 })
 export class MessageGateway implements OnModuleInit {
@@ -28,19 +30,31 @@ export class MessageGateway implements OnModuleInit {
     });
   }
 
-  // @Public() //TODO delete in future
-  @SubscribeMessage('createMessage')
-  async create(
-    @MessageBody() createMessageDto: CreateMessageDto,
-    @CurrentUserWebsocet() user: JwtPayload,
-  ) {
-    await this.messageService.create(createMessageDto, user.id);
+  @SubscribeMessage('createMessage:post')
+async create(
+  @MessageBody() createMessageDto: CreateMessageDto,
+  @CurrentUserWebsocet() user: JwtPayload,
+) {
+  const operationTimeout = 5000;
 
-    this.sever.emit('onMessage', {
-      msg: 'New Message',
-      content: createMessageDto,
-    });
+  const operationPromise = this.messageService.create(createMessageDto, user.id);
+
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('Operation timed out')); // Ошибка по истечении времени
+    }, operationTimeout);
+  });
+
+  try {
+    const result = await Promise.race([operationPromise, timeoutPromise]);
+    
+    return result;
+  } catch (error) {
+    console.error('Operation error:', error.message);
+    throw error;
   }
+}
+
 
   @SubscribeMessage('findAllMessage')
   findAll() {

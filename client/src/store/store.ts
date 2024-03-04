@@ -5,8 +5,14 @@ import allUsersSlice from './slices/allUsersSlice'
 import currentRoomSlice from './slices/currentRoomSlice'
 import roomMessagesSlice from './slices/roomMessagesSlice'
 import websocketMiddleware from '@/middlewares/websocketMiddleware'
-// ...
-const socket = new WebSocket('ws://localhost:5000'); // Подключаемся к вашему вебсокет-серверу
+import { io, Socket } from 'socket.io-client';
+
+const socket: Socket = io('ws://localhost:5000/chat', {
+  extraHeaders: {
+    Authorization: localStorage.getItem('token') || '',
+  },
+});
+
 const socketMiddleware = websocketMiddleware(socket);
 
 export const store = configureStore({

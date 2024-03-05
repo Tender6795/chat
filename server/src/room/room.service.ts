@@ -51,45 +51,48 @@ export class RoomService {
 
   async findOne(roomId: string) {
     try {
-      const room = await this.prismaService.room.findUnique({
-        where: { id: roomId },
-        include: {
-          members: {
-            select: {
-              user: {
-                select: {
-                  id: true,
-                  email: true,
-                  firstName: true,
-                  lastName: true,
-                  avatar: true,
+        const room = await this.prismaService.room.findUnique({
+            where: { id: roomId },
+            include: {
+                members: {
+                    select: {
+                        user: {
+                            select: {
+                                id: true,
+                                email: true,
+                                firstName: true,
+                                lastName: true,
+                                avatar: true,
+                            },
+                        },
+                    },
                 },
-              },
+                creator: {
+                    select: {
+                        id: true,
+                        email: true,
+                        firstName: true,
+                        lastName: true,
+                        avatar: true,
+                    },
+                },
+                messages: {
+                    take: 20, 
+                    orderBy: { createdAt: 'desc' }, 
+                },
             },
-          },
-          creator: {
-            select: {
-              id: true,
-              email: true,
-              firstName: true,
-              lastName: true,
-              avatar: true,
-            },
-          },
-          messages: true,
-        },
-      });
+        });
 
-      if (!room) {
-        throw new Error('Room not found');
-      }
+        if (!room) {
+            throw new Error('Room not found');
+        }
 
-      return room;
+        return room;
     } catch (error) {
-      console.error('Error fetching room by id:', error);
-      throw new Error('Failed to fetch room by id');
+        console.error('Error fetching room by id:', error);
+        throw new Error('Failed to fetch room by id');
     }
-  }
+}
 
   async findAllParticipantsOfRoom(roomId: string) {
     try {

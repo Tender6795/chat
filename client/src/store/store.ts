@@ -9,7 +9,7 @@ import { io, Socket } from 'socket.io-client';
 
 const socket: Socket = io('ws://localhost:5000/chat', {
   extraHeaders: {
-    Authorization: localStorage.getItem('token') || '',
+    Authorization: typeof window !== "undefined" ? localStorage.getItem("token") || '' : '',
   },
 });
 

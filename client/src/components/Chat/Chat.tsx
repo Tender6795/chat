@@ -53,7 +53,7 @@ const Chat: React.FC = () => {
       sendMessage(room!.id, msg);
       setMsg('')
     } catch (error) {
-      console.log("chet error===", error);
+      console.log("chat error===", error);
     }
   };
 

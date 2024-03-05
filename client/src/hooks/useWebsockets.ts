@@ -11,7 +11,7 @@ const useWebSocket = () => {
   useEffect(() => {
     socket = io('ws://localhost:5000/chat', {
       extraHeaders: {
-        Authorization: localStorage.getItem('token') || '',
+        Authorization: typeof window !== "undefined" ? localStorage.getItem("token") || '' : '',
       },
     });
 
@@ -42,9 +42,8 @@ const useWebSocket = () => {
   const sendMessage = (roomId: string, text: string) => {
     const message = { roomId, text };
     if (socket && socket.connected) {
-      console.log('==========');
       socket.emit('createMessage:post',message); 
-      // dispatch(addMessage(message)); 
+      dispatch(addMessage(message)); 
     }
   };
 

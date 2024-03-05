@@ -11,7 +11,7 @@ import { Server } from 'socket.io';
 import { OnModuleInit } from '@nestjs/common';
 import { CurrentUserWebsocket } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
-import { from, Observable } from 'rxjs';
+import { RoomService } from 'src/room/room.service';
 
 @WebSocketGateway({
   namespace: 'chat',
@@ -20,7 +20,11 @@ import { from, Observable } from 'rxjs';
   },
 })
 export class MessageGateway implements OnModuleInit {
-  constructor(private readonly messageService: MessageService) {}
+  constructor(
+    private readonly messageService: MessageService,
+    private readonly roomService: RoomService,
+  ) {}
+
   @WebSocketServer()
   server: Server;
 
@@ -50,8 +54,13 @@ export class MessageGateway implements OnModuleInit {
 
     try {
       const result = await Promise.race([operationPromise, timeoutPromise]);
-      this.server.emit('createMessage:post', result);
-
+      const usersToSendMessageTo: string[] =
+        await this.roomService.findAllParticipantsOfRoom(
+          createMessageDto.roomId,
+        );
+      usersToSendMessageTo.forEach((userId) => {
+        this.server.to(userId).emit('createMessage:post', result);
+      });
       return result;
     } catch (error) {
       console.error('Operation error:', error.message);

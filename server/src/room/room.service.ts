@@ -33,8 +33,8 @@ export class RoomService {
       const user = await this.prismaService.user.findUnique({
         where: { id: userId },
         include: {
-          createdRooms: { include: { members: true } }, // Включаем информацию о членах в созданных комнатах
-          RoomUser: { include: { room: { include: { members: true } } } }, // Включаем информацию о членах в комнатах, где пользователь участвует
+          createdRooms: { include: { members: true } }, 
+          RoomUser: { include: { room: { include: { members: true } } } }, 
         },
       });
 
@@ -90,6 +90,32 @@ export class RoomService {
       throw new Error('Failed to fetch room by id');
     }
   }
+
+  async findAllParticipantsOfRoom(roomId: string) {
+    try {
+        const room = await this.prismaService.room.findUnique({
+            where: { id: roomId },
+            select: {
+                members: {
+                    select: { userId: true }
+                },
+                creatorId: true
+            },
+        });
+
+        if (!room) {
+            throw new Error('Room not found');
+        }
+
+        const participants = room.members.map(member => member.userId);
+        participants.push(room.creatorId);
+
+        return participants;
+    } catch (error) {
+        console.error('Error fetching participants of the room:', error);
+        throw new Error('Failed to fetch participants of the room');
+    }
+}
 
   update(id: number, updateRoomDto: UpdateRoomDto) {
     return `This action updates a #${id} room`;

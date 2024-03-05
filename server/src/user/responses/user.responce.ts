@@ -13,10 +13,14 @@ export class UserResponce implements User {
   password: string;
 
   @Exclude()
+  socketId: string;
+
+  @Exclude()
   createdAt: Date;
 
   @Exclude()
   provider: Provider;
+
 
   updatedAt: Date;
   roles: Role[];

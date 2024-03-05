@@ -77,8 +77,19 @@ export class RoomService {
                     },
                 },
                 messages: {
-                    take: 20, 
-                    orderBy: { createdAt: 'desc' }, 
+                    take: 20,
+                    orderBy: { createdAt: 'desc' },
+                    include: { 
+                        from: { 
+                            select: {
+                                id: true,
+                                email: true,
+                                firstName: true,
+                                lastName: true,
+                                avatar: true,
+                            },
+                        },
+                    },
                 },
             },
         });
@@ -93,6 +104,7 @@ export class RoomService {
         throw new Error('Failed to fetch room by id');
     }
 }
+
 
   async findAllParticipantsOfRoom(roomId: string) {
     try {

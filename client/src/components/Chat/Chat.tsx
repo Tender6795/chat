@@ -8,6 +8,8 @@ import { selectCurrentRoom } from "@/store/slices/currentRoomSlice";
 import { ChatHeader } from "../ChatHeader/ChatHeader";
 import { IUser } from "@/interfaces/auth.interface";
 import useWebSocket from "@/hooks/useWebsockets";
+import { IChatMessage } from "@/interfaces/rooms.interface";
+import { normilezedMessages } from "@/hepler";
 
 const ChatContainer = styled(motion.div)`
   display: flex;
@@ -31,7 +33,8 @@ const InputField = styled(TextField)`
 
 const Chat: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
-  const [msg, setMsg] = useState("");
+  const [textMessage, setTextMessage] = useState("");
+  const [messages, setMessages] = useState<IChatMessage[] | []>([]);
   const { sendMessage } = useWebSocket();
 
   const scrollToBottom = () => {
@@ -50,8 +53,8 @@ const Chat: React.FC = () => {
 
   const handleSendMessage = () => {
     try {
-      sendMessage(room!.id, msg);
-      setMsg('')
+      sendMessage(room!.id, textMessage);
+      setTextMessage("");
     } catch (error) {
       console.log("chat error===", error);
     }
@@ -77,12 +80,15 @@ const Chat: React.FC = () => {
   ];
   const [allUsers, setAllUsers] = useState<Partial<IUser>[]>([]);
 
+ 
   useEffect(() => {
     if (!members || !creator) return;
-    const allMembers = members?.map(
-      (member) => member.user
-    ) as Partial<IUser>[];
-    setAllUsers([...allMembers, creator]);
+    const allMembers = members?.map((member) => member.user) as Partial<IUser>[];
+    const allUsers = [...allMembers, creator];
+    setAllUsers(allUsers);
+    const normilizedMsgs = normilezedMessages(allUsers, room.messages) as IChatMessage[]
+    if(normilezedMessages.length===0) return
+    setMessages(normilizedMsgs);
   }, [members, creator]);
 
   return (
@@ -97,7 +103,7 @@ const Chat: React.FC = () => {
             transition={{ type: "spring", stiffness: 80 }}
           >
             <ChatHeader users={allUsers} title={room.name} />
-            {tmpMessages.map((msg, index) => (
+            {messages.map((msg, index) => (
               <ChatMessage {...msg} key={index} />
             ))}
             <div ref={chatEndRef} />{" "}
@@ -106,8 +112,8 @@ const Chat: React.FC = () => {
             <InputField
               label="Enter your message..."
               variant="outlined"
-              onChange={(e) => setMsg(e.target.value)}
-              value={msg}
+              onChange={(e) => setTextMessage(e.target.value)}
+              value={textMessage}
             />
             <Button onClick={handleSendMessage}>Send</Button>
           </InputContainer>

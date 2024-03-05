@@ -10,10 +10,10 @@ const ChatMessage: React.FC<IChatMessage> = ({
   avatar,
   firstName,
   lastName,
-  senderEmail
+  fromId
 }) => {
   const currentUser = useAppSelector(selectCurrentUser);
-  const isMine = senderEmail === currentUser?.email;
+  const isMine = fromId === currentUser?.id;
   return (
     <div
       className={`${styles.chatMessage} ${isMine ? styles.mine : styles.other}`}

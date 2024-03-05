@@ -16,11 +16,12 @@ export interface IRooms {
 
 export interface IChatMessage {
   text: string;
-  senderEmail: string;
+  senderEmail?: string;
   avatar: string;
-  firstName: string;
-  lastName: string;
-  senderId?: string;
+  firstName?: string;
+  lastName?: string;
+  fromId?: string;
+  roomId?: string;
 }
 
 export interface IMember {

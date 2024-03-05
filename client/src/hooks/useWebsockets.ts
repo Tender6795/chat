@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { addMessage } from '@/store/slices/roomMessagesSlice';
 import { IMessage } from '@/interfaces/message.interface';
 import { useAppDispatch } from '@/store/hooks';
 import { io, Socket } from 'socket.io-client';
+import { addMessage } from '@/store/slices/currentRoomSlice';
 
 let socket: Socket;
 const useWebSocket = () => {
@@ -19,8 +19,9 @@ const useWebSocket = () => {
       console.log('WebSocket connected');
     });
 
+    //TODO wrong format message(
     socket.on('createMessage:post', (message: IMessage) => {
-      dispatch(addMessage(message));
+      // dispatch(addMessage(message));
     });
 
     socket.on('disconnect', () => {

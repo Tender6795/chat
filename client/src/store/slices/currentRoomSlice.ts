@@ -1,8 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { getCurrentRoom } from "@/api";
-import { IRoom } from "@/interfaces/rooms.interface";
+import { IChatMessage, IRoom } from "@/interfaces/rooms.interface";
 import { sliceHelper } from "./sliceHelper";
+import { IMessage } from "@/interfaces/message.interface";
 
 interface CurrentRoomState {
   room: IRoom | null;
@@ -32,9 +33,19 @@ const currentRoomSlice = createSlice({
   initialState,
   reducers: {
     leave(state) {
-      state.loading = true;
+      state.loading = false;
       state.error = null;
       state.room = null;
+    },
+    addMessage(state, action: PayloadAction<IChatMessage>) {
+      if (state.room) {
+        state.room = {
+          ...state.room,
+          messages: state.room.messages
+            ? [...state.room.messages, action.payload]
+            : [action.payload],
+        };
+      }
     },
   },
   extraReducers: (builder) => {
@@ -48,9 +59,8 @@ const currentRoomSlice = createSlice({
   },
 });
 
+export const { leave, addMessage } = currentRoomSlice.actions;
 
-export const { leave } = currentRoomSlice.actions;
-
-export const selectCurrentRoom = (state: RootState) => state.currentRoom.room
+export const selectCurrentRoom = (state: RootState) => state.currentRoom.room;
 
 export default currentRoomSlice.reducer;

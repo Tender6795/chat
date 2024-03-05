@@ -41,7 +41,6 @@ const Chat: React.FC = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // useWebSocket()
   useEffect(() => {
     scrollToBottom();
   }, []);
@@ -52,32 +51,11 @@ const Chat: React.FC = () => {
   const creator = room?.creator as Partial<IUser>;
 
   const handleSendMessage = () => {
-    try {
       sendMessage(room!.id, textMessage);
       setTextMessage("");
-    } catch (error) {
-      console.log("chat error===", error);
-    }
   };
 
-  const tmpMessages = [
-    {
-      text: " test message my",
-      senderEmail: "test33@mail.com",
-      avatar:
-        "https://cs14.pikabu.ru/post_img/big/2023/02/13/8/1676296367166243426.png",
-      firstName: "test",
-      lastName: "test",
-    },
-    {
-      text: " test message not my",
-      senderEmail: "test2@mail.com",
-      avatar:
-        "https://cs14.pikabu.ru/post_img/big/2023/02/13/8/1676296367166243426.png",
-      firstName: "test",
-      lastName: "test",
-    },
-  ];
+
   const [allUsers, setAllUsers] = useState<Partial<IUser>[]>([]);
 
  
@@ -86,9 +64,9 @@ const Chat: React.FC = () => {
     const allMembers = members?.map((member) => member.user) as Partial<IUser>[];
     const allUsers = [...allMembers, creator];
     setAllUsers(allUsers);
-    const normilizedMsgs = normilezedMessages(allUsers, room.messages) as IChatMessage[]
+    // const normilizedMsgs = normilezedMessages(allUsers, room.messages) as IChatMessage[]
     if(normilezedMessages.length===0) return
-    setMessages(normilizedMsgs);
+    setMessages(room.messages);
   }, [members, creator]);
 
   return (
@@ -102,7 +80,7 @@ const Chat: React.FC = () => {
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 80 }}
           >
-            <ChatHeader users={allUsers} title={room.name} />
+          <ChatHeader users={allUsers} title={room.name} />
             {messages.map((msg, index) => (
               <ChatMessage {...msg} key={index} />
             ))}

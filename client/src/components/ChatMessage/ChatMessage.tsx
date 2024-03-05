@@ -4,14 +4,10 @@ import React from "react";
 import styles from "./ChatMessage.module.css";
 import { IChatMessage } from "@/interfaces/rooms.interface";
 import Image from "next/image";
+import { IUser } from "@/interfaces/auth.interface";
 
-const ChatMessage: React.FC<IChatMessage> = ({
-  text,
-  avatar,
-  firstName,
-  lastName,
-  fromId
-}) => {
+const ChatMessage: React.FC<IChatMessage> = ({ text, from, fromId }) => {
+  const { avatar, firstName, lastName } = from as IUser;
   const currentUser = useAppSelector(selectCurrentUser);
   const isMine = fromId === currentUser?.id;
   return (

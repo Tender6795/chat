@@ -16,14 +16,14 @@ const roomMessagesSlice = createSlice({
   name: "roomMessages",
   initialState,
   reducers: {
-    addMessage(state, action: PayloadAction<IMessage>) {
-      state.messages = [...state.messages, action.payload];
-    },
+    // addMessage(state, action: PayloadAction<IMessage>) {
+    //   state.messages = [...state.messages, action.payload];
+    // },
     setMessages(state, action) {
       state.messages = action.payload;
     },
   },
 });
 
-export const { addMessage, setMessages } = roomMessagesSlice.actions;
+export const {  setMessages } = roomMessagesSlice.actions;
 export default roomMessagesSlice.reducer;

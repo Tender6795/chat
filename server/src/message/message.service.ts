@@ -18,13 +18,26 @@ export class MessageService {
           ...createMessageDto,
           fromId: fromId,
         },
+        include: {
+          from: {
+            select: {
+              id: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+              avatar: true,
+            },
+          },
+        },
       });
+
       return createdMessage;
     } catch (error) {
       console.error('Failed to create message:', error);
       throw new Error('Failed to create message');
     }
   }
+
 
   async findAllMessageInRoom({roomId, page, pageSize=20}: FindAllMessageInRoomDto) {
     try {

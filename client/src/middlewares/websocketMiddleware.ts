@@ -1,7 +1,8 @@
 import { Middleware, Dispatch, AnyAction } from '@reduxjs/toolkit';
-import { addMessage } from '@/store/slices/roomMessagesSlice';
 import { IMessage } from '@/interfaces/message.interface';
 import { Socket } from 'socket.io-client';
+import { addMessage } from '@/store/slices/currentRoomSlice';
+import { IChatMessage } from '@/interfaces/rooms.interface';
 
 type WebsocketMiddlewareCreator = (socket: Socket) => Middleware; 
 
@@ -17,7 +18,7 @@ const websocketMiddleware: WebsocketMiddlewareCreator = (socket: Socket) => {
   return ({ dispatch }) => (next) => (action) => {
     if (socketHandler === null) {
       socketHandler = (event) => {
-        const message: IMessage = JSON.parse(event.data);
+        const message: IChatMessage = JSON.parse(event.data);
         dispatch(addMessage(message));
       };
 

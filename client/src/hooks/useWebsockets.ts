@@ -3,6 +3,7 @@ import { IMessage } from '@/interfaces/message.interface';
 import { useAppDispatch } from '@/store/hooks';
 import { io, Socket } from 'socket.io-client';
 import { addMessage } from '@/store/slices/currentRoomSlice';
+import { IChatMessage } from '@/interfaces/rooms.interface';
 
 let socket: Socket;
 const useWebSocket = () => {
@@ -19,9 +20,8 @@ const useWebSocket = () => {
       console.log('WebSocket connected');
     });
 
-    //TODO wrong format message(
-    socket.on('createMessage:post', (message: IMessage) => {
-      // dispatch(addMessage(message));
+    socket.on('createMessage:post', (message: IChatMessage) => {
+      dispatch(addMessage(message));
     });
 
     socket.on('disconnect', () => {

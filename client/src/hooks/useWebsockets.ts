@@ -19,8 +19,7 @@ const useWebSocket = () => {
       console.log('WebSocket connected');
     });
 
-    socket.on('message', (data: string) => {
-      const message: IMessage = JSON.parse(data);
+    socket.on('createMessage:post', (message: IMessage) => {
       dispatch(addMessage(message));
     });
 
@@ -43,7 +42,6 @@ const useWebSocket = () => {
     const message = { roomId, text };
     if (socket && socket.connected) {
       socket.emit('createMessage:post',message); 
-      dispatch(addMessage(message)); 
     }
   };
 

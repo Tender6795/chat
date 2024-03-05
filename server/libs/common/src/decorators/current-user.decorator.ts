@@ -13,7 +13,7 @@ export const CurrentUser = createParamDecorator(
   },
 );
 
-export const CurrentUserWebsocet = createParamDecorator(
+export const CurrentUserWebsocket = createParamDecorator(
   (
     key: keyof JwtPayload,
     ctx: ExecutionContext,

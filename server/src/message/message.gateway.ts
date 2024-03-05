@@ -8,10 +8,11 @@ import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { Server } from 'socket.io';
-import { OnModuleInit } from '@nestjs/common';
+import { Body, OnModuleInit, Post } from '@nestjs/common';
 import { CurrentUserWebsocket } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
 import { RoomService } from 'src/room/room.service';
+import { FindAllMessageInRoomDto } from './dto/find-all-message-in-room-body.dto';
 
 @WebSocketGateway({
   namespace: 'chat',
@@ -68,9 +69,11 @@ export class MessageGateway implements OnModuleInit {
     }
   }
 
-  @SubscribeMessage('findAllMessage')
-  findAll() {
-    return this.messageService.findAll();
+  @Post('findAllMessageInRoom')
+  findAllMessageInRoomdAll(
+    @MessageBody() findAllMessageInRoomDto: FindAllMessageInRoomDto,
+  ) {
+    return this.messageService.findAllMessageInRoom(findAllMessageInRoomDto);
   }
 
   @SubscribeMessage('findOneMessage')

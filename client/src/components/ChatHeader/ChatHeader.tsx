@@ -3,15 +3,23 @@ import React from "react";
 import Image from "next/image";
 import { IUser } from "@/interfaces/auth.interface";
 import styles from "./ChatHeader.module.css";
+import { styled } from "@mui/system";
 
 interface ChatHeadersProps {
   users: Partial<IUser>[];
   title: string;
 }
 
+const FixedChatHeader = styled(Box)`
+  position: sticky;
+  top: 0;
+  background-color: #E6F7FF; 
+  z-index: 999; 
+`;
+
 export const ChatHeader: React.FC<ChatHeadersProps> = ({ users, title }) => {
   return (
-    <Box
+    <FixedChatHeader
       display="flex"
       alignItems="center"
       justifyContent="space-between"
@@ -56,6 +64,6 @@ export const ChatHeader: React.FC<ChatHeadersProps> = ({ users, title }) => {
           </Tooltip>
         ))}
       </Box>
-    </Box>
+    </FixedChatHeader>
   );
 };

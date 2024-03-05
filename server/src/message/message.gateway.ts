@@ -74,8 +74,6 @@ export class MessageGateway implements OnModuleInit {
       const usersToSendMessageTo: string[] = await this.roomService.findAllParticipantsOfRoom(
         createMessageDto.roomId,
       );
-      console.log({usersToSendMessageTo});
-      console.log('======', this.users);
       usersToSendMessageTo.forEach((userId) => {
         const socket = this.users.get(userId);
         if (socket) {

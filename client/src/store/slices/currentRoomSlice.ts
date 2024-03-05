@@ -3,7 +3,6 @@ import { RootState } from "../store";
 import { getCurrentRoom } from "@/api";
 import { IChatMessage, IRoom } from "@/interfaces/rooms.interface";
 import { sliceHelper } from "./sliceHelper";
-import { IMessage } from "@/interfaces/message.interface";
 
 interface CurrentRoomState {
   room: IRoom | null;
@@ -38,13 +37,8 @@ const currentRoomSlice = createSlice({
       state.room = null;
     },
     addMessage(state, action: PayloadAction<IChatMessage>) {
-      if (state.room) {
-        state.room = {
-          ...state.room,
-          messages: state.room.messages
-            ? [...state.room.messages, action.payload]
-            : [action.payload],
-        };
+      if (state.room && state.room.messages) {
+        state.room.messages.push(action.payload);
       }
     },
   },

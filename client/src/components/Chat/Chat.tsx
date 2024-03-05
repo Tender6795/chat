@@ -64,9 +64,6 @@ const Chat: React.FC = () => {
     const allMembers = members?.map((member) => member.user) as Partial<IUser>[];
     const allUsers = [...allMembers, creator];
     setAllUsers(allUsers);
-    // const normilizedMsgs = normilezedMessages(allUsers, room.messages) as IChatMessage[]
-    if(normilezedMessages.length===0) return
-    setMessages(room.messages);
   }, [members, creator]);
 
   return (
@@ -81,7 +78,7 @@ const Chat: React.FC = () => {
             transition={{ type: "spring", stiffness: 80 }}
           >
           <ChatHeader users={allUsers} title={room.name} />
-            {messages.map((msg, index) => (
+            {room?.messages.map((msg, index) => (
               <ChatMessage {...msg} key={index} />
             ))}
             <div ref={chatEndRef} />{" "}

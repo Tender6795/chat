@@ -7,7 +7,7 @@ import {
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { Body, OnModuleInit, Post } from '@nestjs/common';
 import { CurrentUserWebsocket } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
@@ -29,9 +29,25 @@ export class MessageGateway implements OnModuleInit {
   @WebSocketServer()
   server: Server;
 
+  private readonly users: Map<string, Socket> = new Map();
+
   onModuleInit() {
-    this.server.on('connection', (socket) => {
+    this.server.on('connection', (socket: Socket) => {
       console.log('Connected socket.id:', socket.id);
+
+      socket.on('userId', (userId: string) => {
+        this.users.set(userId, socket);
+        console.log(`User ${userId} connected`);
+      });
+
+      socket.on('disconnect', () => {
+        this.users.forEach((value, key) => {
+          if (value === socket) {
+            this.users.delete(key);
+            console.log(`User ${key} disconnected`);
+          }
+        });
+      });
     });
   }
 
@@ -55,13 +71,18 @@ export class MessageGateway implements OnModuleInit {
 
     try {
       const result = await Promise.race([operationPromise, timeoutPromise]);
-      const usersToSendMessageTo: string[] =
-        await this.roomService.findAllParticipantsOfRoom(
-          createMessageDto.roomId,
-        );
+      const usersToSendMessageTo: string[] = await this.roomService.findAllParticipantsOfRoom(
+        createMessageDto.roomId,
+      );
+      console.log({usersToSendMessageTo});
+      console.log('======', this.users);
       usersToSendMessageTo.forEach((userId) => {
-        this.server.to(userId).emit('createMessage:post', result);
+        const socket = this.users.get(userId);
+        if (socket) {
+          socket.emit('createMessage:post', result);
+        }
       });
+
       return result;
     } catch (error) {
       console.error('Operation error:', error.message);

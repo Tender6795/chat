@@ -34,16 +34,12 @@ const InputField = styled(TextField)`
 const Chat: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [textMessage, setTextMessage] = useState("");
-  const [messages, setMessages] = useState<IChatMessage[] | []>([]);
   const { sendMessage } = useWebSocket();
 
-  const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // const scrollToBottom = () => {
+  //   chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, []);
 
   const dispatch = useAppDispatch();
   const room = useAppSelector(selectCurrentRoom);
@@ -57,16 +53,27 @@ const Chat: React.FC = () => {
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter") {
-      event.preventDefault(); // Prevent the default action of the Enter key
-      handleSendMessage(); // Call handleSendMessage function
+      event.preventDefault();
+      handleSendMessage();
     }
   };
+
+  const scrollToBottom = () => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollTop = chatEndRef.current.scrollHeight;
+    }
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [room?.messages]);
 
   const [allUsers, setAllUsers] = useState<Partial<IUser>[]>([]);
 
   useEffect(() => {
     if (!members || !creator) return;
-    const allMembers = members?.map((member) => member.user) as Partial<IUser>[];
+    const allMembers = members?.map(
+      (member) => member.user
+    ) as Partial<IUser>[];
     const allUsers = [...allMembers, creator];
     setAllUsers(allUsers);
   }, [members, creator]);
@@ -81,21 +88,25 @@ const Chat: React.FC = () => {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 80 }}
+            ref={chatEndRef}
           >
             <ChatHeader users={allUsers} title={room.name} />
-            {room?.messages.map((msg, index) => (
-              <ChatMessage {...msg} key={index} />
-            ))}
-            <div ref={chatEndRef} />{" "}
+            {room?.messages
+              .slice(0)
+              .reverse()
+              .map((msg, index) => (
+                <ChatMessage {...msg} key={index} />
+              ))}
+            <div  />{" "}
           </ChatContainer>
           <InputContainer>
             <InputField
               label="Enter your message..."
               variant="outlined"
               onChange={(e) => setTextMessage(e.target.value)}
-              onKeyDown={handleKeyPress} 
+              onKeyDown={handleKeyPress}
               value={textMessage}
-              inputProps={{ maxLength: 100 }} 
+              inputProps={{ maxLength: 100 }}
             />
             <Button onClick={handleSendMessage}>Send</Button>
           </InputContainer>

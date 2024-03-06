@@ -48,6 +48,17 @@ export class MessageService {
         orderBy: {
           createdAt: 'desc',
         },
+        include: {
+          from: {
+            select: {
+              id: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+              avatar: true,
+            },
+          },
+        },
         skip: messageAlreadyOnPage,
         take: pageSize,
       });

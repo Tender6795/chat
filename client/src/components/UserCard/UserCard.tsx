@@ -33,7 +33,7 @@ const UserCard: React.FC<UserProps> = ({
   );
   const dispatch = useAppDispatch();
 
-  const userName = firstName ? `${firstName} ${lastName}` : email;
+  const userName: string = firstName ? `${firstName} ${lastName}` : "";
 
   const handleRoomSelect = () => {
     setShowRoomSelect(true);
@@ -44,9 +44,9 @@ const UserCard: React.FC<UserProps> = ({
   };
 
   const handleConfirm = () => {
-    if(!selectedRoom) {
+    if (!selectedRoom) {
       setShowRoomSelect(false);
-      return
+      return;
     }
     dispatch(addUserToRoom({ roomId: selectedRoom, userId: id }));
     setShowRoomSelect(false);
@@ -106,7 +106,7 @@ const UserCard: React.FC<UserProps> = ({
               </Button>
             </>
           )}
-          {showRoomSelect && (
+          {showRoomSelect && rooms && (
             <div style={{ display: "flex", alignItems: "center" }}>
               <Select
                 label="Select room"

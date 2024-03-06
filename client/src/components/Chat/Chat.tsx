@@ -78,6 +78,16 @@ const Chat: React.FC = () => {
     setAllUsers(allUsers);
   }, [members, creator]);
 
+  const handleMoreMessage = () => {
+    const container = chatEndRef.current;
+    if (container) {
+      const { scrollTop } = container;
+      if (scrollTop === 0) {
+        alert("Пользователь поднял скролл вверх");
+      }
+    }
+  };
+
   return (
     <div style={{ marginRight: 10 }}>
       {room && (
@@ -89,6 +99,7 @@ const Chat: React.FC = () => {
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 80 }}
             ref={chatEndRef}
+            onScroll={handleMoreMessage}
           >
             <ChatHeader users={allUsers} title={room.name} />
             {room?.messages

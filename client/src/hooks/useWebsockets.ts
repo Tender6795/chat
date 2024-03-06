@@ -43,7 +43,7 @@ const useWebSocket = () => {
         socket.disconnect();
       }
     };
-  }, [dispatch]);
+  }, [currentUser]);
 
   const sendMessage = (roomId: string, text: string) => {
     const message = { roomId, text };

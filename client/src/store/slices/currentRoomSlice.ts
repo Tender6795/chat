@@ -38,8 +38,15 @@ const currentRoomSlice = createSlice({
     },
     addMessage(state, action: PayloadAction<IChatMessage>) {
       if (state.room && state.room.messages) {
-        state.room.messages.push(action.payload);
+        return {
+          ...state,
+          room: {
+            ...state.room,
+            messages: [ action.payload,...state.room.messages],
+          },
+        };
       }
+      return state;
     },
   },
   extraReducers: (builder) => {

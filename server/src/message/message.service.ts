@@ -3,7 +3,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { PrismaService } from '@prisma/prisma.service';
 import { Message } from '@prisma/client';
-import { FindAllMessageInRoomDto } from './dto/find-all-message-in-room-body.dto';
+import { FindMoreMessageInRoomDto } from './dto/find-all-message-in-room-body.dto';
 
 @Injectable()
 export class MessageService {
@@ -39,7 +39,7 @@ export class MessageService {
   }
 
 
-  async findAllMessageInRoom({roomId, page, pageSize=20}: FindAllMessageInRoomDto) {
+  async findMoreMessageInRoom({roomId, messageAlreadyOnPage, pageSize=20}: FindMoreMessageInRoomDto) {
     try {
       const messages = await this.prisma.message.findMany({
         where: {
@@ -48,7 +48,7 @@ export class MessageService {
         orderBy: {
           createdAt: 'desc',
         },
-        skip: (page - 1) * pageSize,
+        skip: messageAlreadyOnPage,
         take: pageSize,
       });
 

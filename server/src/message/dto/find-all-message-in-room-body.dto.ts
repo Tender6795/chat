@@ -1,7 +1,5 @@
-// findAllMessageInRoom
-
-export class FindAllMessageInRoomDto {
+export class FindMoreMessageInRoomDto {
   readonly roomId: string;
-  readonly page: number;
+  readonly messageAlreadyOnPage: number;
   readonly pageSize?: number;
 }

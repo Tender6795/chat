@@ -39,12 +39,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjljMGVhZGY2L
 }
 ###
 
-//All message in room 
-POST http://localhost:5000/api/chat/findAllMessageInRoom HTTP/1.1
+//More message in room 
+POST http://localhost:5000/api/chat/findMoreMessageInRoom HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjljMGVhZGY2LWRhNDAtNGQ0Ny05NzIzLTc3OTA5YTI2YzRjOCIsImVtYWlsIjoidGVzdDMzQG1haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJhdmF0YXIiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy8xNjc2Mjk2MzY3MTY2MjQzNDI2LnBuZyIsImZpcnN0TmFtZSI6IlJlZCIsImxhc3ROYW1lIjoiS29hbGEiLCJpYXQiOjE3MDk2Mzc2MzUsImV4cCI6MTcwOTcyNDAzNX0.wO1NFOHRWVYcqEyc8noMOAXPmqg9Ge2Q3BJ7GPymiyU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkNGUxNTBjLWMzMDgtNGU0MS05MGEyLWYzZTZiZjc2NGQ2MyIsImVtYWlsIjoidGVzdEBtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiYXZhdGFyIjoiaHR0cHM6Ly9jczE0LnBpa2FidS5ydS9wb3N0X2ltZy9iaWcvMjAyMy8wMi8xMy84LzE2NzYyOTYzNjcxNjYyNDM0MjYucG5nIiwiZmlyc3ROYW1lIjoiRnJpZW5kbHkiLCJsYXN0TmFtZSI6IlBvcmN1cGluZSIsImlhdCI6MTcwOTcyMTY1NSwiZXhwIjoxNzA5ODA4MDU1fQ.PvKGJOVxNSOpQmD6YjslHHn4h2p4WtTuQ3-ydvLw1UU
 
 {
-    "roomId": "2a3fa36e-051f-4a87-b98a-8392da3b3407",
-    "page":1
+    "roomId": "f33c6a99-acab-4579-93b7-f94f654a0ed4",
+    "messageAlreadyOnPage":3
 }

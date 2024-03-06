@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  fetchCurrentRoom,
+  fetchCurrentRoom, selectCurrentRoom,
 } from "@/store/slices/currentRoomSlice";
 
 interface RoomProps {
@@ -29,8 +29,10 @@ const RoomCard: React.FC<RoomProps> = ({
       : "No description";
 
   const dispatch = useAppDispatch();
+  const room = useAppSelector(selectCurrentRoom);
 
   const handleOpen = () => {
+    if(room && room.id===id) return
     dispatch(fetchCurrentRoom(id));
   };
 

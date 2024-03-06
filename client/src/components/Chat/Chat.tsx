@@ -51,14 +51,19 @@ const Chat: React.FC = () => {
   const creator = room?.creator as Partial<IUser>;
 
   const handleSendMessage = () => {
-      sendMessage(room!.id, textMessage);
-      setTextMessage("");
+    sendMessage(room!.id, textMessage);
+    setTextMessage("");
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent the default action of the Enter key
+      handleSendMessage(); // Call handleSendMessage function
+    }
+  };
 
   const [allUsers, setAllUsers] = useState<Partial<IUser>[]>([]);
 
- 
   useEffect(() => {
     if (!members || !creator) return;
     const allMembers = members?.map((member) => member.user) as Partial<IUser>[];
@@ -77,7 +82,7 @@ const Chat: React.FC = () => {
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 80 }}
           >
-          <ChatHeader users={allUsers} title={room.name} />
+            <ChatHeader users={allUsers} title={room.name} />
             {room?.messages.map((msg, index) => (
               <ChatMessage {...msg} key={index} />
             ))}
@@ -88,7 +93,9 @@ const Chat: React.FC = () => {
               label="Enter your message..."
               variant="outlined"
               onChange={(e) => setTextMessage(e.target.value)}
+              onKeyDown={handleKeyPress} 
               value={textMessage}
+              inputProps={{ maxLength: 100 }} 
             />
             <Button onClick={handleSendMessage}>Send</Button>
           </InputContainer>

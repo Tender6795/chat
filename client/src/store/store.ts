@@ -21,8 +21,8 @@ export const store = configureStore({
     allUsers: allUsersSlice,
     currentRoom: currentRoomSlice,
   },
-  middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware().concat(socketMiddleware),
+  // middleware: (getDefaultMiddleware) =>
+  // getDefaultMiddleware().concat(socketMiddleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>

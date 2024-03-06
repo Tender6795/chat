@@ -2,6 +2,7 @@ import { IAuth } from "@/interfaces/auth.interface";
 import { get, post, patch, httpDelete } from "./axios";
 import { RoomCreate } from "@/interfaces/room-create.inteface";
 import { AddUserToRoom } from "@/interfaces/add-user-to-room.interface";
+import { IFindMoreMessageInRoom } from "@/interfaces/rooms.interface";
 
 /* auth requests */
 export const login = (body: IAuth) =>
@@ -22,11 +23,12 @@ export const createRoomApi = (body: RoomCreate) => post("/room", body);
 export const getCurrentRoom = (id: string) => get(`/room/${id}`);
 export const addUserToRoomApi = (body: AddUserToRoom) =>
   post("/room/addUserToRoom", body);
+export const findMoreMessageInRoom = (body: IFindMoreMessageInRoom) =>
+  post("/chat/findMoreMessageInRoom ", body);
 //current user
 export const currentUser = () => post("/user/currentUser");
 export const updateUser = (formData: any) =>
   patch("/user/currentUser", formData);
+
 // /* users requests */
 export const getAllUsers = () => get("/user");
-// export const updateUser = (body) => patch(`/user/${body.id}`, body.data);
-// export const getUserByEmail = (body) => get(`/user/email/${body}`);

@@ -31,3 +31,9 @@ export interface IMember {
   userId: string;
   user?: Partial<IUser>;
 }
+
+export interface IFindMoreMessageInRoom {
+  readonly roomId: string;
+  readonly messageAlreadyOnPage: number;
+  readonly pageSize?: number;
+}

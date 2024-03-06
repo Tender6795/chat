@@ -4,12 +4,13 @@ import { styled } from "@mui/system";
 import { motion } from "framer-motion";
 import ChatMessage from "../ChatMessage/ChatMessage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { selectCurrentRoom } from "@/store/slices/currentRoomSlice";
+import {
+  fetchfindMoreMessageInRoom,
+  selectCurrentRoom,
+} from "@/store/slices/currentRoomSlice";
 import { ChatHeader } from "../ChatHeader/ChatHeader";
 import { IUser } from "@/interfaces/auth.interface";
 import useWebSocket from "@/hooks/useWebsockets";
-import { IChatMessage } from "@/interfaces/rooms.interface";
-import { normilezedMessages } from "@/hepler";
 
 const ChatContainer = styled(motion.div)`
   display: flex;
@@ -32,17 +33,13 @@ const InputField = styled(TextField)`
 `;
 
 const Chat: React.FC = () => {
+  const dispatch = useAppDispatch();
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [textMessage, setTextMessage] = useState("");
   const { sendMessage } = useWebSocket();
 
-  // const scrollToBottom = () => {
-  //   chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // };
-
-
-  const dispatch = useAppDispatch();
   const room = useAppSelector(selectCurrentRoom);
+
   const members = room?.members;
   const creator = room?.creator as Partial<IUser>;
 
@@ -82,8 +79,13 @@ const Chat: React.FC = () => {
     const container = chatEndRef.current;
     if (container) {
       const { scrollTop } = container;
-      if (scrollTop === 0) {
-        alert("Пользователь поднял скролл вверх");
+      if (scrollTop === 0 && room) {
+        dispatch(
+          fetchfindMoreMessageInRoom({
+            roomId: room?.id,
+            messageAlreadyOnPage: room?.messages.length,
+          })
+        );
       }
     }
   };
@@ -108,7 +110,7 @@ const Chat: React.FC = () => {
               .map((msg, index) => (
                 <ChatMessage {...msg} key={index} />
               ))}
-            <div  />{" "}
+            <div />{" "}
           </ChatContainer>
           <InputContainer>
             <InputField

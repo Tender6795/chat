@@ -7,13 +7,13 @@
 3. Run the server:
 
 ```bash
-cd cd server/
+cd server/
 npm i
 npm run start:dev
 ```
 4. Run client:
 ```bash
-cd cd client/
+cd client/
 npm i
 npm run dev
 ```

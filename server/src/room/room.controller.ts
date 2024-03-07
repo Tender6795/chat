@@ -14,17 +14,23 @@ import { CurrentUser } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
 import { AddUserToRoomDto } from './dto/add-user-to-room.dto';
 import { DeleteUserFromRoomDto } from './dto/delete-user-from-room.dto';
+import { MessageGateway } from 'src/message/message.gateway';
 
 @Controller('room')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) {}
+  constructor(
+    private readonly roomService: RoomService,
+    private readonly messageGateway: MessageGateway,
+  ) {}
 
   @Post()
-  create(
+  async create(
     @Body() createRoomDto: CreateRoomDto,
     @CurrentUser() user: JwtPayload,
   ) {
-    return this.roomService.create(createRoomDto, user.id);
+    const newRoom = await this.roomService.create(createRoomDto, user.id);
+    this.messageGateway.createRoomSubscription(newRoom);
+    return newRoom;
   }
 
   @Post('addUserToRoom')

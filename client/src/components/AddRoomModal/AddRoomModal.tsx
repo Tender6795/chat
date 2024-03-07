@@ -4,7 +4,8 @@ import * as Yup from "yup";
 import { Box, Button, Typography, Modal, TextField } from "@mui/material";
 import { RoomCreate } from "@/interfaces/room-create.inteface";
 import { useAppDispatch } from "@/store/hooks";
-import { createRoom } from "@/store/slices/allRoomsSlice";
+// import { createRoom } from "@/store/slices/allRoomsSlice";
+import { createRoomApi } from "@/api";
 
 const style = {
   position: "absolute",
@@ -30,7 +31,8 @@ export const AddRoomModal = () => {
   const dispatch = useAppDispatch();
 
   const hanldeAddRoom = (values: RoomCreate) => {
-    dispatch(createRoom(values));
+    // dispatch(createRoom(values));
+    createRoomApi(values)
     handleClose();
   };
 

@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { io, Socket } from "socket.io-client";
 import { addMessage } from "@/store/slices/currentRoomSlice";
-import { IChatMessage } from "@/interfaces/rooms.interface";
+import { IChatMessage, IRoom } from "@/interfaces/rooms.interface";
 import { selectCurrentUser } from "@/store/slices/userSlice";
+import { addRoom } from "@/store/slices/allRoomsSlice";
 
 let socket: Socket;
 const useWebSocket = () => {
@@ -29,6 +30,10 @@ const useWebSocket = () => {
     socket.on("createMessage:post", (message: IChatMessage) => {
       dispatch(addMessage(message));
     });
+
+    socket.on('createRoom:post',(newRoom:Partial<IRoom>)=>{
+      dispatch(addRoom(newRoom));
+    })
 
     socket.on("disconnect", () => {
       console.log("WebSocket disconnected");

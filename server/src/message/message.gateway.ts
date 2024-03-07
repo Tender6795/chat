@@ -13,6 +13,7 @@ import { CurrentUserWebsocket } from '@common/decorators';
 import { JwtPayload } from '@auth/interfaces';
 import { RoomService } from 'src/room/room.service';
 import { FindMoreMessageInRoomDto } from './dto/find-all-message-in-room-body.dto';
+import { CreateRoomDto } from 'src/room/dto/create-room.dto';
 
 @WebSocketGateway({
   namespace: 'chat',
@@ -71,9 +72,10 @@ export class MessageGateway implements OnModuleInit {
 
     try {
       const result = await Promise.race([operationPromise, timeoutPromise]);
-      const usersToSendMessageTo: string[] = await this.roomService.findAllParticipantsOfRoom(
-        createMessageDto.roomId,
-      );
+      const usersToSendMessageTo: string[] =
+        await this.roomService.findAllParticipantsOfRoom(
+          createMessageDto.roomId,
+        );
       usersToSendMessageTo.forEach((userId) => {
         const socket = this.users.get(userId);
         if (socket) {
@@ -86,6 +88,11 @@ export class MessageGateway implements OnModuleInit {
       console.error('Operation error:', error.message);
       throw error;
     }
+  }
+
+  @SubscribeMessage('createRoom:post')
+  public createRoomSubscription(newRoom: CreateRoomDto) {
+    this.server.emit('createRoom:post', newRoom);
   }
 
   @Post('findMoreMessageInRoom')

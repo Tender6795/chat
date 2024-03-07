@@ -90,9 +90,12 @@ export class MessageGateway implements OnModuleInit {
     }
   }
 
-  @SubscribeMessage('createRoom:post')
-  public createRoomSubscription(newRoom: CreateRoomDto) {
-    this.server.emit('createRoom:post', newRoom);
+  @SubscribeMessage('addUserToRoom:post')
+  public addUserToRoom(newRoom: CreateRoomDto, newUserId) {
+    const socket = this.users.get(newUserId);
+    if (socket) {
+      socket.emit('addUserToRoom:post', newRoom);
+    }
   }
 
   @Post('findMoreMessageInRoom')

@@ -189,7 +189,7 @@ export class RoomService {
         },
       });
 
-      return roomUser;
+      return {roomUser , room, userId};
     } catch (error) {
       console.error('Error adding user to room:', error);
       throw new Error('Failed to add user to room.');

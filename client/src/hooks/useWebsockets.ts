@@ -11,8 +11,8 @@ const useWebSocket = () => {
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
 
-
   useEffect(() => {
+    if (!currentUser) return;
     socket = io("ws://localhost:5000/chat", {
       extraHeaders: {
         Authorization:
@@ -21,7 +21,7 @@ const useWebSocket = () => {
             : "",
       },
     });
-    socket.emit("userId", currentUser?.id || '');
+    socket.emit("userId", currentUser?.id || "");
 
     socket.on("connect", () => {
       console.log("WebSocket connected");
@@ -31,10 +31,9 @@ const useWebSocket = () => {
       dispatch(addMessage(message));
     });
 
-    // socket.on('createRoom:post',(newRoom:Partial<IRoom>)=>{
-    //   dispatch(addRoom(newRoom));
-    // })
-
+    socket.on("addUserToRoom:post", (newRoom: Partial<IRoom>) => {
+      dispatch(addRoom(newRoom));
+    });
     socket.on("disconnect", () => {
       console.log("WebSocket disconnected");
     });

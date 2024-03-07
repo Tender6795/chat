@@ -29,16 +29,20 @@ export class RoomController {
     @CurrentUser() user: JwtPayload,
   ) {
     const newRoom = await this.roomService.create(createRoomDto, user.id);
-    // this.messageGateway.createRoomSubscription(newRoom);
     return newRoom;
   }
 
   @Post('addUserToRoom')
-  addUserToRoom(
+  async addUserToRoom(
     @Body() addUserToRoomDto: AddUserToRoomDto,
     @CurrentUser() user: JwtPayload,
   ) {
-    return this.roomService.addUserToRoom(addUserToRoomDto, user);
+    const { roomUser, room, userId } = await this.roomService.addUserToRoom(
+      addUserToRoomDto,
+      user,
+    );
+    this.messageGateway.addUserToRoom(room, userId)
+    return roomUser;
   }
 
   @Post('deleteUserFromRoom')

@@ -1,5 +1,5 @@
 .scrollContainer {
-  height: calc(100vh - 64px);
+  max-height: calc(100vh - 150px);
   overflow: auto;
 }
 .scrollContainer::-webkit-scrollbar {

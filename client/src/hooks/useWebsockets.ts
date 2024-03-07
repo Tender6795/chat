@@ -31,9 +31,9 @@ const useWebSocket = () => {
       dispatch(addMessage(message));
     });
 
-    socket.on('createRoom:post',(newRoom:Partial<IRoom>)=>{
-      dispatch(addRoom(newRoom));
-    })
+    // socket.on('createRoom:post',(newRoom:Partial<IRoom>)=>{
+    //   dispatch(addRoom(newRoom));
+    // })
 
     socket.on("disconnect", () => {
       console.log("WebSocket disconnected");

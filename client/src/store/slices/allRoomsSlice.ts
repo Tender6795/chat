@@ -25,16 +25,16 @@ export const fetchAllRooms = createAsyncThunk("fetchAllRooms", async () => {
   }
 });
 
-// export const createRoom = createAsyncThunk(
-//   "createRoom",
-//   async (body: RoomCreate) => {
-//     try {
-//       return await createRoomApi(body);
-//     } catch (error) {
-//       throw error;
-//     }
-//   }
-// );
+export const createRoom = createAsyncThunk(
+  "createRoom",
+  async (body: RoomCreate) => {
+    try {
+      return await createRoomApi(body);
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 export const addUserToRoom = createAsyncThunk(
   "addUserToRoom",
@@ -62,13 +62,13 @@ const allRoomsSlice = createSlice({
       }
     );
 
-    // sliceHelper(builder, createRoom).addCase(
-    //   createRoom.fulfilled,
-    //   (state: any, action: any) => {
-    //     state.loading = false;
-    //     state.rooms = [...state.rooms, action.payload];
-    //   }
-    // );
+    sliceHelper(builder, createRoom).addCase(
+      createRoom.fulfilled,
+      (state: any, action: any) => {
+        state.loading = false;
+        state.rooms = [...state.rooms, action.payload];
+      }
+    );
 
     sliceHelper(builder, addUserToRoom).addCase(
       addUserToRoom.fulfilled,

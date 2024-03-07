@@ -29,7 +29,7 @@ export class RoomController {
     @CurrentUser() user: JwtPayload,
   ) {
     const newRoom = await this.roomService.create(createRoomDto, user.id);
-    this.messageGateway.createRoomSubscription(newRoom);
+    // this.messageGateway.createRoomSubscription(newRoom);
     return newRoom;
   }
 

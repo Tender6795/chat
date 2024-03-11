@@ -24,7 +24,7 @@ model User {
   roles        Role[]
   Token        Token[]
   Message      Message[]
-  createdRooms Room[] // Переименовано из "Room" в "createdRooms"
+  createdRooms Room[]
   RoomUser     RoomUser[]
 
   @@map("users")
@@ -53,10 +53,11 @@ model Room {
   id          String     @id @default(uuid())
   name        String
   description String?
-  creator     User       @relation(fields: [creatorId], references: [id])
+  creator     User?      @relation(fields: [creatorId], references: [id])
   creatorId   String
   members     RoomUser[]
   messages    Message[]
+  isPrivate   Boolean    @default(false)
 }
 
 model RoomUser {

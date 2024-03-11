@@ -19,7 +19,7 @@ const ChatMessage: React.FC<IChatMessage> = ({ text, from, fromId }) => {
           <Image src={avatar} alt="Avatar" width={40} height={40} />
         </div>
         <div className={styles.name}>
-          {firstName} {lastName}
+          {isMine ? "You" : firstName + " " + lastName}
         </div>
       </div>
       <div className={styles.text}>{text}</div>

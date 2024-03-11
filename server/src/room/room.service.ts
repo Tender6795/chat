@@ -46,6 +46,36 @@ export class RoomService {
             },
           ],
         },
+        include: {
+          messages: {
+            take: 20,
+            orderBy: { createdAt: 'desc' },
+            include: {
+              from: {
+                select: {
+                  id: true,
+                  email: true,
+                  firstName: true,
+                  lastName: true,
+                  avatar: true,
+                },
+              },
+            },
+          },
+           members: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  email: true,
+                  firstName: true,
+                  lastName: true,
+                  avatar: true,
+                },
+              },
+            },
+          },
+        }
       });
 
       if (existingRoom) {
@@ -63,6 +93,36 @@ export class RoomService {
             },
           },
         },
+        include: {
+          messages: {
+            take: 20,
+            orderBy: { createdAt: 'desc' },
+            include: {
+              from: {
+                select: {
+                  id: true,
+                  email: true,
+                  firstName: true,
+                  lastName: true,
+                  avatar: true,
+                },
+              },
+            },
+          },
+          members: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  email: true,
+                  firstName: true,
+                  lastName: true,
+                  avatar: true,
+                },
+              },
+            },
+          },
+        }
       });
 
       return createdRoom;

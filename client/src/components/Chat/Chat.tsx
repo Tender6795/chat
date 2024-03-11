@@ -40,7 +40,7 @@ const Chat: React.FC = () => {
   const { sendMessage } = useWebSocket();
 
   const room = useAppSelector(selectCurrentRoom);
-
+  
   const members = room?.members;
   const creator = room?.creator as Partial<IUser>;
 
@@ -75,7 +75,7 @@ const Chat: React.FC = () => {
     const allMembers = members?.map(
       (member) => member.user
     ) as Partial<IUser>[];
-    const allUsers = [...allMembers, creator];
+    const allUsers =creator ?  [...allMembers, creator]: allMembers;
     setAllUsers(allUsers);
   }, [members, creator]);
 

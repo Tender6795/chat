@@ -16,7 +16,8 @@ import { IRoom } from "@/interfaces/rooms.interface";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
-
+import { selectCurrentUser } from "@/store/slices/userSlice";
+import { fetchСreatePrivateRoomApi } from "@/store/slices/currentRoomSlice";
 interface UserProps {
   user: IUser;
   index: number;
@@ -27,6 +28,8 @@ const UserCard: React.FC<UserProps> = ({
   index,
 }) => {
   const rooms = useAppSelector(selectAllRooms).rooms as IRoom[];
+  const currentUser = useAppSelector(selectCurrentUser);
+
   const [showRoomSelect, setShowRoomSelect] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(
     rooms.length > 0 ? rooms[0].id : ""
@@ -50,6 +53,10 @@ const UserCard: React.FC<UserProps> = ({
     }
     dispatch(addUserToRoom({ roomId: selectedRoom, userId: id }));
     setShowRoomSelect(false);
+  };
+
+  const hanldeChating = async () => {
+    await dispatch(fetchСreatePrivateRoomApi({ invitedUserId: id }));
   };
 
   return (
@@ -101,7 +108,7 @@ const UserCard: React.FC<UserProps> = ({
               <Button size="small" onClick={handleRoomSelect} sx={{ mt: 2 }}>
                 Invite to room
               </Button>
-              <Button size="small" sx={{ mt: 2 }}>
+              <Button size="small" sx={{ mt: 2 }} onClick={hanldeChating}>
                 Chating
               </Button>
             </>

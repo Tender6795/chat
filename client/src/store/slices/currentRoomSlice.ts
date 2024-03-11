@@ -1,12 +1,17 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { findMoreMessageInRoom, getCurrentRoom } from "@/api";
+import {
+  createPrivateRoomApi,
+  findMoreMessageInRoom,
+  getCurrentRoom,
+} from "@/api";
 import {
   IChatMessage,
   IFindMoreMessageInRoom,
   IRoom,
 } from "@/interfaces/rooms.interface";
 import { sliceHelper } from "./sliceHelper";
+import { PrivateRoomCreate } from "@/interfaces/room-create.inteface";
 
 interface CurrentRoomState {
   room: IRoom | null;
@@ -36,6 +41,17 @@ export const fetchfindMoreMessageInRoom = createAsyncThunk(
   async (body: IFindMoreMessageInRoom) => {
     try {
       return await findMoreMessageInRoom(body);
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const fetchСreatePrivateRoomApi = createAsyncThunk(
+  "fetchСreatePrivateRoomApi",
+  async (body: PrivateRoomCreate) => {
+    try {
+      return await createPrivateRoomApi(body);
     } catch (error) {
       throw error;
     }
@@ -73,10 +89,18 @@ const currentRoomSlice = createSlice({
       }
     );
 
+    sliceHelper(builder, fetchСreatePrivateRoomApi).addCase(
+      fetchСreatePrivateRoomApi.fulfilled,
+      (state: any, action: any) => {
+        state.loading = false;
+        state.room = action.payload as IRoom;
+      }
+    );
+
     sliceHelper(builder, fetchfindMoreMessageInRoom).addCase(
       fetchfindMoreMessageInRoom.fulfilled,
       (state: any, action: PayloadAction<IChatMessage[]>) => {
-        state.room.messages.push(...action.payload)
+        state.room.messages.push(...action.payload);
       }
     );
   },

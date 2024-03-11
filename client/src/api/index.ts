@@ -1,6 +1,9 @@
 import { IAuth } from "@/interfaces/auth.interface";
 import { get, post, patch, httpDelete } from "./axios";
-import { RoomCreate } from "@/interfaces/room-create.inteface";
+import {
+  PrivateRoomCreate,
+  RoomCreate,
+} from "@/interfaces/room-create.inteface";
 import { AddUserToRoom } from "@/interfaces/add-user-to-room.interface";
 import { IFindMoreMessageInRoom } from "@/interfaces/rooms.interface";
 
@@ -20,6 +23,9 @@ export const google = () => get("/auth/google");
 // rooms
 export const getAllRoom = () => get("/room");
 export const createRoomApi = (body: RoomCreate) => post("/room", body);
+export const createPrivateRoomApi = (body: PrivateRoomCreate) =>
+  post("/room/createPrivateRoom", body);
+
 export const getCurrentRoom = (id: string) => get(`/room/${id}`);
 export const addUserToRoomApi = (body: AddUserToRoom) =>
   post("/room/addUserToRoom", body);

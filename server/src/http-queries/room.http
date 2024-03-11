@@ -48,3 +48,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkNGUxNTBjL
     "roomId": "f33c6a99-acab-4579-93b7-f94f654a0ed4",
     "messageAlreadyOnPage":3
 }
+###
+// Create private room
+
+POST http://localhost:5000/api/room/createPrivateRoom HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJiY2I2OWE5LTgyZTEtNDYyNy05Yzc3LTUwYmFlZDdmOWY4ZCIsImVtYWlsIjoidGVzdDJAbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImF2YXRhciI6Imh0dHBzOi8vY3MxNC5waWthYnUucnUvcG9zdF9pbWcvYmlnLzIwMjMvMDIvMTMvOC8xNjc2Mjk2MzY3MTY2MjQzNDI2LnBuZyIsImZpcnN0TmFtZSI6IkFjdGl2ZSIsImxhc3ROYW1lIjoiSGlwcG9wb3RhbXVzIiwiaWF0IjoxNzEwMTQ4MzMzLCJleHAiOjE3MTAyMzQ3MzN9.lI51Cj2p1dzP-WrFYX9BAl6Gm9VPBRB_RucLH2M6UVM
+
+{
+    "invitedUserId": "fd4e150c-c308-4e41-90a2-f3e6bf764d63"
+}

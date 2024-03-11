@@ -15,6 +15,7 @@ import { JwtPayload } from '@auth/interfaces';
 import { AddUserToRoomDto } from './dto/add-user-to-room.dto';
 import { DeleteUserFromRoomDto } from './dto/delete-user-from-room.dto';
 import { MessageGateway } from 'src/message/message.gateway';
+import { CreatePrivateRoomDto } from './dto/create-private-room-dto';
 
 @Controller('room')
 export class RoomController {
@@ -30,6 +31,17 @@ export class RoomController {
   ) {
     const newRoom = await this.roomService.create(createRoomDto, user.id);
     return newRoom;
+  }
+
+  @Post('createPrivateRoom')
+  async createPrivateRoom(
+    @Body() createPrivateRoomDto: CreatePrivateRoomDto,
+    @CurrentUser() user: JwtPayload,
+  ){
+    console.log('id1', createPrivateRoomDto.invitedUserId);
+    console.log('id2', user.id);
+
+    return this.roomService.createPrivateRoom(createPrivateRoomDto.invitedUserId, user.id)
   }
 
   @Post('addUserToRoom')

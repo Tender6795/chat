@@ -28,13 +28,57 @@ export class RoomService {
     }
   }
 
+  async createPrivateRoom(firstUserId: string, secondUserId: string) {
+    try {
+      const existingRoom = await this.prismaService.room.findFirst({
+        where: {
+          AND: [
+            { isPrivate: true },
+            {
+              members: {
+                some: { userId: firstUserId },
+              },
+            },
+            {
+              members: {
+                some: { userId: secondUserId },
+              },
+            },
+          ],
+        },
+      });
+
+      if (existingRoom) {
+        console.log('Private room exist');
+        return existingRoom;
+      }
+
+      const createdRoom = await this.prismaService.room.create({
+        data: {
+          name:'private',
+          isPrivate: true,
+          members: {
+            createMany: {
+              data: [{ userId: firstUserId }, { userId: secondUserId }],
+            },
+          },
+        },
+      });
+
+      return createdRoom;
+    } catch (error) {
+      console.error('Error create private room :', error);
+      throw new Error('failed to create private room');
+    }
+  }
+
   async findAll(userId: string) {
     try {
       const user = await this.prismaService.user.findUnique({
         where: { id: userId },
         include: {
-          createdRooms: { include: { members: true } }, 
-          RoomUser: { include: { room: { include: { members: true } } } }, 
+          createdRooms: { include: { members: true } },
+          RoomUser: { include: { room: { include: { members: true } } } },
         },
       });
 
@@ -51,86 +95,85 @@ export class RoomService {
 
   async findOne(roomId: string) {
     try {
-        const room = await this.prismaService.room.findUnique({
-            where: { id: roomId },
-            include: {
-                members: {
-                    select: {
-                        user: {
-                            select: {
-                                id: true,
-                                email: true,
-                                firstName: true,
-                                lastName: true,
-                                avatar: true,
-                            },
-                        },
-                    },
+      const room = await this.prismaService.room.findUnique({
+        where: { id: roomId },
+        include: {
+          members: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  email: true,
+                  firstName: true,
+                  lastName: true,
+                  avatar: true,
                 },
-                creator: {
-                    select: {
-                        id: true,
-                        email: true,
-                        firstName: true,
-                        lastName: true,
-                        avatar: true,
-                    },
-                },
-                messages: {
-                    take: 20,
-                    orderBy: { createdAt: 'desc' },
-                    include: { 
-                        from: { 
-                            select: {
-                                id: true,
-                                email: true,
-                                firstName: true,
-                                lastName: true,
-                                avatar: true,
-                            },
-                        },
-                    },
-                },
+              },
             },
-        });
+          },
+          creator: {
+            select: {
+              id: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+              avatar: true,
+            },
+          },
+          messages: {
+            take: 20,
+            orderBy: { createdAt: 'desc' },
+            include: {
+              from: {
+                select: {
+                  id: true,
+                  email: true,
+                  firstName: true,
+                  lastName: true,
+                  avatar: true,
+                },
+              },
+            },
+          },
+        },
+      });
 
-        if (!room) {
-            throw new Error('Room not found');
-        }
+      if (!room) {
+        throw new Error('Room not found');
+      }
 
-        return room;
+      return room;
     } catch (error) {
-        console.error('Error fetching room by id:', error);
-        throw new Error('Failed to fetch room by id');
+      console.error('Error fetching room by id:', error);
+      throw new Error('Failed to fetch room by id');
     }
-}
-
+  }
 
   async findAllParticipantsOfRoom(roomId: string) {
     try {
-        const room = await this.prismaService.room.findUnique({
-            where: { id: roomId },
-            select: {
-                members: {
-                    select: { userId: true }
-                },
-                creatorId: true
-            },
-        });
+      const room = await this.prismaService.room.findUnique({
+        where: { id: roomId },
+        select: {
+          members: {
+            select: { userId: true },
+          },
+          creatorId: true,
+        },
+      });
 
-        if (!room) {
-            throw new Error('Room not found');
-        }
+      if (!room) {
+        throw new Error('Room not found');
+      }
 
-        const participants = room.members.map(member => member.userId);
-        participants.push(room.creatorId);
+      const participants = room.members.map((member) => member.userId);
+      participants.push(room.creatorId);
 
-        return participants;
+      return participants;
     } catch (error) {
-        console.error('Error fetching participants of the room:', error);
-        throw new Error('Failed to fetch participants of the room');
+      console.error('Error fetching participants of the room:', error);
+      throw new Error('Failed to fetch participants of the room');
     }
-}
+  }
 
   update(id: number, updateRoomDto: UpdateRoomDto) {
     return `This action updates a #${id} room`;
@@ -189,7 +232,7 @@ export class RoomService {
         },
       });
 
-      return {roomUser , room, userId};
+      return { roomUser, room, userId };
     } catch (error) {
       console.error('Error adding user to room:', error);
       throw new Error('Failed to add user to room.');

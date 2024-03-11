@@ -36,6 +36,7 @@ const Chat: React.FC = () => {
   const dispatch = useAppDispatch();
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [textMessage, setTextMessage] = useState("");
+  const [countMsg, setCountMsg] = useState(0);
   const { sendMessage } = useWebSocket();
 
   const room = useAppSelector(selectCurrentRoom);
@@ -61,7 +62,10 @@ const Chat: React.FC = () => {
     }
   };
   useEffect(() => {
-    scrollToBottom();
+    if (room?.messages && countMsg === 0 || countMsg + 1 == room?.messages.length){
+      scrollToBottom();
+      setCountMsg(+room?.messages.length)
+    }
   }, [room?.messages]);
 
   const [allUsers, setAllUsers] = useState<Partial<IUser>[]>([]);

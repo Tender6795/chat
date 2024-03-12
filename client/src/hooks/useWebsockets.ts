@@ -32,25 +32,12 @@ const useWebSocket = () => {
 
     socket.on("createMessage:post", async (message: IChatMessage) => {
       await dispatch(addMessage(message));
-      if(room?.id===message.roomId) {
-        return
-      }
-      toast("You have new message", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-        onClick: () => dispatch(fetchCurrentRoom(message.roomId || "")),
-      });
+      handleToast(message.roomId||'', 'You have new message')
     });
 
     socket.on("addUserToRoom:post", (newRoom: Partial<IRoom>) => {
       dispatch(addRoom(newRoom));
+      handleToast(newRoom.id ||'', 'You have been invited to a new room')
     });
     socket.on("disconnect", () => {
       console.log("WebSocket disconnected");
@@ -67,8 +54,22 @@ const useWebSocket = () => {
     };
   }, [currentUser]);
 
-  const handleClickToToastMsg = (roomId: string) => {
-    debugger;
+  const handleToast = (roomId: string, msg: string) => {
+    if(room?.id===roomId) {
+      return
+    }
+    toast("You have new message", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+      onClick: () => dispatch(fetchCurrentRoom(roomId || "")),
+    });
   };
 
   const sendMessage = (roomId: string, text: string) => {

@@ -1,15 +1,18 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { io, Socket } from "socket.io-client";
-import { addMessage } from "@/store/slices/currentRoomSlice";
+import { addMessage, fetchCurrentRoom, selectCurrentRoom } from "@/store/slices/currentRoomSlice";
 import { IChatMessage, IRoom } from "@/interfaces/rooms.interface";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { addRoom } from "@/store/slices/allRoomsSlice";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 let socket: Socket;
 const useWebSocket = () => {
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
+  const room = useAppSelector(selectCurrentRoom);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -27,8 +30,24 @@ const useWebSocket = () => {
       console.log("WebSocket connected");
     });
 
-    socket.on("createMessage:post", (message: IChatMessage) => {
-      dispatch(addMessage(message));
+    socket.on("createMessage:post", async (message: IChatMessage) => {
+      await dispatch(addMessage(message));
+      if(room?.id===message.roomId) {
+        return
+      }
+      debugger
+      toast("You have new message", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        onClick: () => dispatch(fetchCurrentRoom(message.roomId || "")),
+      });
     });
 
     socket.on("addUserToRoom:post", (newRoom: Partial<IRoom>) => {
@@ -48,6 +67,10 @@ const useWebSocket = () => {
       }
     };
   }, [currentUser]);
+
+  const handleClickToToastMsg = (roomId: string) => {
+    debugger;
+  };
 
   const sendMessage = (roomId: string, text: string) => {
     const message = { roomId, text };

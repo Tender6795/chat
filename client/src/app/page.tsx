@@ -1,14 +1,15 @@
 "use client";
 import { Grid } from "@mui/material";
-import { AddRoomModal } from "@/components/AddRoomModal/AddRoomModal";
-import { AllRooms } from "@/components/AllRooms/AllRooms";
-import LoginModal from "@/components/AuthModal/AuthModal";
-import { Websocket } from "@/components/Websocket";
-import { AllUsers } from "@/components/AllUsers/AllUsers";
 import Chat from "@/components/Chat/Chat";
 import UsersAndRoomsTabs from "@/components/UsersAndRoomsTabs/UsersAndRoomsTabs";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
+  const handleClick =(e:any)=>{
+    console.log(e);
+    debugger
+  }
   return (
     <>
       <Grid container spacing={2}>
@@ -19,6 +20,7 @@ export default function Home() {
           <Chat />
         </Grid>
       </Grid>
+      <ToastContainer />
     </>
   );
 }

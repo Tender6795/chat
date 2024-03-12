@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { io, Socket } from "socket.io-client";
-import { addMessage, fetchCurrentRoom, selectCurrentRoom } from "@/store/slices/currentRoomSlice";
+import {
+  addMessage,
+  fetchCurrentRoom,
+  selectCurrentRoom,
+} from "@/store/slices/currentRoomSlice";
 import { IChatMessage, IRoom } from "@/interfaces/rooms.interface";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { addRoom } from "@/store/slices/allRoomsSlice";
@@ -32,12 +36,12 @@ const useWebSocket = () => {
 
     socket.on("createMessage:post", async (message: IChatMessage) => {
       await dispatch(addMessage(message));
-      handleToast(message.roomId||'', 'You have new message')
+      handleToast(message.roomId || "", "You have new message");
     });
 
     socket.on("addUserToRoom:post", (newRoom: Partial<IRoom>) => {
       dispatch(addRoom(newRoom));
-      handleToast(newRoom.id ||'', 'You have been invited to a new room')
+      handleToast(newRoom.id || "", "You have been invited to a new room");
     });
     socket.on("disconnect", () => {
       console.log("WebSocket disconnected");
@@ -55,10 +59,10 @@ const useWebSocket = () => {
   }, [currentUser]);
 
   const handleToast = (roomId: string, msg: string) => {
-    if(room?.id===roomId) {
-      return
+    if (room?.id === roomId) {
+      return;
     }
-    toast("You have new message", {
+    toast(msg, {
       position: "bottom-right",
       autoClose: 5000,
       hideProgressBar: false,

@@ -35,7 +35,6 @@ const useWebSocket = () => {
       if(room?.id===message.roomId) {
         return
       }
-      debugger
       toast("You have new message", {
         position: "bottom-right",
         autoClose: 5000,

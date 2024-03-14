@@ -63,7 +63,7 @@ const useWebSocket = () => {
         socket.disconnect();
       }
     };
-  }, [currentUser]);
+  }, [currentUser, room]);
 
   const handleToast = (roomId: string, msg: string) => {
     if (room?.id === roomId) {

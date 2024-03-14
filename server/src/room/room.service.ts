@@ -21,6 +21,9 @@ export class RoomService {
           description: createRoomDto.description,
           creatorId,
         },
+        include: {
+          members: true,
+        },
       });
     } catch (error) {
       console.error('Error create room:', error);

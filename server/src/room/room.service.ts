@@ -145,16 +145,23 @@ export class RoomService {
         },
       });
 
-      const createdRooms = user.createdRooms.map((room) => room);
-      const rooms = user.RoomUser.map((roomUser) => roomUser.room);
+      const createdRooms = user.createdRooms
+        .filter(room => !room.isPrivate) 
+        .map(room => room);
+
+      const rooms = user.RoomUser
+        .map(roomUser => roomUser.room)
+        .filter(room => !room.isPrivate); 
+
       const groups = [...createdRooms, ...rooms];
 
       return groups;
     } catch (error) {
       console.error('Error fetching user rooms:', error);
-      throw new Error('Failed to fetch user roЫoms');
+      throw new Error('Failed to fetch user rooms');
     }
   }
+
 
   async findOne(roomId: string) {
     try {

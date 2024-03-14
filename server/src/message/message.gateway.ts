@@ -99,8 +99,8 @@ export class MessageGateway implements OnModuleInit {
   }
   @SubscribeMessage('deleteRoom')
   public deleteRoom(roomId: string, members) {
-    members.forEach((userId) => {
-      const socket = this.users.get(userId);
+    members.forEach((user) => {
+      const socket = this.users.get(user.userId);
       if (socket) {
         socket.emit('deleteRoom', roomId);
       }

@@ -9,7 +9,7 @@ import {
 } from "@/store/slices/currentRoomSlice";
 import { IChatMessage, IRoom } from "@/interfaces/rooms.interface";
 import { selectCurrentUser } from "@/store/slices/userSlice";
-import { addRoom, deleteRoom } from "@/store/slices/allRoomsSlice";
+import { addRoom, removeRoomFromAllRooms } from "@/store/slices/allRoomsSlice";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -46,8 +46,8 @@ const useWebSocket = () => {
     });
 
     socket.on('deleteRoom', (roomId:string)=>{
-      dispatch(deleteRoom(roomId))
-      if(room?.id===roomId) dispatch(leave())
+      dispatch(removeRoomFromAllRooms(roomId)) // delete room from list of room 
+      if(room?.id===roomId) dispatch(leave()) // leave room if room open
     })
 
     socket.on("disconnect", () => {

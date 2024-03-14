@@ -248,6 +248,11 @@ export class RoomService {
       if (room.creatorId !== user.id && !user.roles.includes(Role.ADMIN)) {
         throw new ForbiddenException();
       }
+      await this.prismaService.message.deleteMany({
+        where: {
+          roomId: roomId
+        }
+      });
 
       const deletedRoom = await this.prismaService.room.delete({
         where: { id: roomId },

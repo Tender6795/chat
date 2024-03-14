@@ -62,7 +62,7 @@ export class RoomService {
               },
             },
           },
-           members: {
+          members: {
             select: {
               user: {
                 select: {
@@ -75,7 +75,7 @@ export class RoomService {
               },
             },
           },
-        }
+        },
       });
 
       if (existingRoom) {
@@ -85,7 +85,7 @@ export class RoomService {
 
       const createdRoom = await this.prismaService.room.create({
         data: {
-          name:'private',
+          name: 'private',
           isPrivate: true,
           members: {
             createMany: {
@@ -122,7 +122,7 @@ export class RoomService {
               },
             },
           },
-        }
+        },
       });
 
       return createdRoom;
@@ -250,16 +250,16 @@ export class RoomService {
       }
       await this.prismaService.message.deleteMany({
         where: {
-          roomId: roomId
-        }
+          roomId: roomId,
+        },
       });
 
       const deletedRoom = await this.prismaService.room.delete({
         where: { id: roomId },
         select: {
           id: true,
-          members: { select: { id: true } }
-        }
+          members: { select: { userId: true } },
+        },
       });
 
       return deletedRoom;

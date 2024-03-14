@@ -31,6 +31,8 @@ export const addUserToRoomApi = (body: AddUserToRoom) =>
   post("/room/addUserToRoom", body);
 export const findMoreMessageInRoom = (body: IFindMoreMessageInRoom) =>
   post("/chat/findMoreMessageInRoom ", body);
+export const deleteRoomApi = (roomId: string) => httpDelete(`/room/${roomId}`)
+
 //current user
 export const currentUser = () => post("/user/currentUser");
 export const updateUser = (formData: any) =>

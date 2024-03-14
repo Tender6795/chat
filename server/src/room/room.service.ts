@@ -249,11 +249,15 @@ export class RoomService {
         throw new ForbiddenException();
       }
 
-      const deletedGroup = await this.prismaService.room.delete({
+      const deletedRoom = await this.prismaService.room.delete({
         where: { id: roomId },
+        select: {
+          id: true,
+          members: { select: { id: true } }
+        }
       });
 
-      return deletedGroup;
+      return deletedRoom;
     } catch (error) {
       console.error('Error deleting room by id:', error);
       throw new Error('Failed to delete room by id');

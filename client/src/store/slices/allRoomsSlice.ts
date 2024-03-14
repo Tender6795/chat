@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { sliceHelper } from "./sliceHelper";
-import { addUserToRoomApi, createRoomApi, getAllRoom } from "@/api";
+import { addUserToRoomApi, createRoomApi, deleteRoomApi, getAllRoom } from "@/api";
 import { RoomCreate } from "@/interfaces/room-create.inteface";
 import { IMember, IRoom } from "@/interfaces/rooms.interface";
 import { AddUserToRoom } from "@/interfaces/add-user-to-room.interface";
@@ -41,7 +41,20 @@ export const addUserToRoom = createAsyncThunk(
   async (body: AddUserToRoom) => {
     try {
       return await addUserToRoomApi(body) as IMember;
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const deleteRoom = createAsyncThunk(
+  "deleteRoom",
+  async (roomID: string) => {
+    try {
+      return await deleteRoomApi(roomID) as IMember;
+    } catch (error) {
+      throw error;
+    }
   }
 );
 
@@ -51,6 +64,9 @@ const allRoomsSlice = createSlice({
   reducers: {
     addRoom(state, action){
       state.rooms =  [...state.rooms, action.payload]
+    },
+    removeRoom (state, action){
+      state.rooms = [...state.rooms.filter((room: IRoom)=>room.id !== action.payload)]
     }
   },
   extraReducers: (builder) => {
@@ -82,7 +98,13 @@ const allRoomsSlice = createSlice({
         })]
       }
     );
-
+    sliceHelper(builder, deleteRoom).addCase(
+      deleteRoom.fulfilled,
+      (state: any, action: any) => {
+        state.loading = false;
+        state.rooms = [...state.rooms.filter((room: IRoom)=>room.id !== action.payload)];
+      }
+    );
 
   },
 });

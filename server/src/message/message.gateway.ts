@@ -97,7 +97,15 @@ export class MessageGateway implements OnModuleInit {
       socket.emit('addUserToRoom:post', newRoom);
     }
   }
-
+  @SubscribeMessage('deleteRoom')
+  public deleteRoom(roomId: string, members) {
+    members.forEach((userId) => {
+      const socket = this.users.get(userId);
+      if (socket) {
+        socket.emit('deleteRoom', roomId);
+      }
+    });
+  }
   @Post('findMoreMessageInRoom')
   findMoreMessageInRoom(
     @MessageBody() findAllMessageInRoomDto: FindMoreMessageInRoomDto,

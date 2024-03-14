@@ -4,11 +4,12 @@ import { io, Socket } from "socket.io-client";
 import {
   addMessage,
   fetchCurrentRoom,
+  leave,
   selectCurrentRoom,
 } from "@/store/slices/currentRoomSlice";
 import { IChatMessage, IRoom } from "@/interfaces/rooms.interface";
 import { selectCurrentUser } from "@/store/slices/userSlice";
-import { addRoom } from "@/store/slices/allRoomsSlice";
+import { addRoom, deleteRoom } from "@/store/slices/allRoomsSlice";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -43,6 +44,12 @@ const useWebSocket = () => {
       dispatch(addRoom(newRoom));
       handleToast(newRoom.id || "", "You have been invited to a new room");
     });
+
+    socket.on('deleteRoom', (roomId:string)=>{
+      dispatch(deleteRoom(roomId))
+      if(room?.id===roomId) dispatch(leave())
+    })
+
     socket.on("disconnect", () => {
       console.log("WebSocket disconnected");
     });

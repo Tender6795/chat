@@ -10,8 +10,11 @@ import {
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  fetchCurrentRoom, selectCurrentRoom,
+  fetchCurrentRoom,
+  selectCurrentRoom,
 } from "@/store/slices/currentRoomSlice";
+import { selectCurrentUser } from "@/store/slices/userSlice";
+import { deleteRoom } from "@/store/slices/allRoomsSlice";
 
 interface RoomProps {
   room: IRoom;
@@ -19,7 +22,7 @@ interface RoomProps {
 }
 
 const RoomCard: React.FC<RoomProps> = ({
-  room: { name, description, id },
+  room: { name, description, id, creatorId },
   index,
 }) => {
   const truncatedName = name.length > 10 ? name.slice(0, 10) + "..." : name;
@@ -27,13 +30,18 @@ const RoomCard: React.FC<RoomProps> = ({
     description && description.length > 60
       ? description.slice(0, 60) + "..."
       : "No description";
-
   const dispatch = useAppDispatch();
   const room = useAppSelector(selectCurrentRoom);
+  const currentUser = useAppSelector(selectCurrentUser);
 
+  const isCreatedByMe = currentUser?.id === creatorId;
   const handleOpen = () => {
-    if(room && room.id===id) return
+    if (room && room.id === id) return;
     dispatch(fetchCurrentRoom(id));
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteRoom(id))
   };
 
   return (
@@ -73,6 +81,7 @@ const RoomCard: React.FC<RoomProps> = ({
           <Button size="small" onClick={handleOpen}>
             Open
           </Button>
+          {isCreatedByMe && <Button size="small" onClick={handleDelete}>Delete room</Button>}
         </CardActions>
       </Card>
     </motion.div>

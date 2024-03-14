@@ -37,11 +37,11 @@ export class RoomController {
   async createPrivateRoom(
     @Body() createPrivateRoomDto: CreatePrivateRoomDto,
     @CurrentUser() user: JwtPayload,
-  ){
-    console.log('id1', createPrivateRoomDto.invitedUserId);
-    console.log('id2', user.id);
-
-    return this.roomService.createPrivateRoom(createPrivateRoomDto.invitedUserId, user.id)
+  ) {
+    return this.roomService.createPrivateRoom(
+      createPrivateRoomDto.invitedUserId,
+      user.id,
+    );
   }
 
   @Post('addUserToRoom')
@@ -53,7 +53,7 @@ export class RoomController {
       addUserToRoomDto,
       user,
     );
-    this.messageGateway.addUserToRoom(room, userId)
+    this.messageGateway.addUserToRoom(room, userId);
     return roomUser;
   }
 
@@ -62,7 +62,10 @@ export class RoomController {
     @Body() deleteUserFromRoomDto: DeleteUserFromRoomDto,
     @CurrentUser() user: JwtPayload,
   ) {
-    return this.roomService.removeUserFromRoom(deleteUserFromRoomDto, user.id);
+    const deleteRoomInfo = this.roomService.removeUserFromRoom(
+      deleteUserFromRoomDto,
+      user.id,
+    );
   }
 
   @Get()
@@ -81,7 +84,9 @@ export class RoomController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
-    return this.roomService.remove(id, user);
+  async remove(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    const deleteRoomInfo = await this.roomService.remove(id, user);
+    this.messageGateway.deleteRoom(deleteRoomInfo.id, deleteRoomInfo.members)
+    return deleteRoomInfo.id;
   }
 }

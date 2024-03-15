@@ -31,6 +31,7 @@ const validationSchema: Yup.Schema<IAuth> = Yup.object({
 const AuthModal: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [actionType, setActionType] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
   const handleOpen = () => setOpen(true);
@@ -46,10 +47,17 @@ const AuthModal: React.FC = () => {
     _: any,
     actionType: string
   ) => {
+    let res = null;
     if (actionType === "login") {
-      dispatch(fetchLogin(values));
+      res = await dispatch(fetchLogin(values));
     } else {
-      dispatch(fetchRegistration(values));
+      res = await dispatch(fetchRegistration(values));
+    }
+    // @ts-ignore
+    if (res?.error) {
+      // @ts-ignore
+      setError(res.error.message);
+      return;
     }
     handleClose();
   };
@@ -99,7 +107,11 @@ const AuthModal: React.FC = () => {
                   margin="normal"
                 />
                 <ErrorMessage name="password" component="div" />
-
+                {error && (
+                  <Typography variant="body2" color="error">
+                    {error}
+                  </Typography>
+                )}
                 <Button
                   type="submit"
                   variant="contained"

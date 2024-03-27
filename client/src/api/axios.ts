@@ -28,7 +28,7 @@ const _patch = <T>(...rest: any[]): Promise<T> => api<T>(axios.patch, rest);
 
 const _delete = <T>(...rest: any[]): Promise<T> => api<T>(axios.delete, rest);
 
-export const baseURL: string = process.env.REACT_APP_API_SRC || 'http://localhost:5000/api';
+export const baseURL: string = process.env.REACT_APP_API_SRC || 'http://localhost:5000/api/test';
 
 const setCustomHeader = (headers: CustomHeaders): CustomHeaders => {
   let custom_headers: CustomHeaders = { ...headers };

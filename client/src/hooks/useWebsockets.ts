@@ -21,7 +21,7 @@ const useWebSocket = () => {
 
   useEffect(() => {
     if (!currentUser) return;
-    socket = io(process.env.REACT_APP_API_WEBSOCET_SRC ||"ws://localhost:5000/chat", {
+    socket = io(process.env.WEBSOCKET_SRC ||"ws://localhost:5000/chat", {
       extraHeaders: {
         Authorization:
           typeof window !== "undefined"

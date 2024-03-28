@@ -21,6 +21,7 @@ const useWebSocket = () => {
 
   useEffect(() => {
     if (!currentUser) return;
+    console.log('useWebSocket process.env.WEBSOCKET_SRC: ', process.env.WEBSOCKET_SRC);
     socket = io(process.env.WEBSOCKET_SRC ||"ws://localhost:5000/chat", {
       extraHeaders: {
         Authorization:

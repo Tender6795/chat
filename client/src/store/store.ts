@@ -6,6 +6,9 @@ import currentRoomSlice from './slices/currentRoomSlice'
 import websocketMiddleware from '@/middlewares/websocketMiddleware'
 import { io, Socket } from 'socket.io-client';
 
+
+console.log('store process.env.WEBSOCKET_SRC: ', process.env.WEBSOCKET_SRC);
+
 const socket: Socket = io(process.env.WEBSOCKET_SRC ||'ws://localhost:5000/chat', {
   extraHeaders: {
     Authorization: typeof window !== "undefined" ? localStorage.getItem("token") || '' : '',

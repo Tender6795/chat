@@ -21,22 +21,23 @@ const useWebSocket = () => {
 
   useEffect(() => {
     if (!currentUser) return;
-    const protocol = window.location.protocol.includes(
-      "https"
-      )
-      ? "wss"
-      : "ws";
-      
-      
-      console.log('useWebSocket process.env.WEBSOCKET_SRC: ', `${protocol}${process.env.WEBSOCKET_SRC}`);
-    socket = io(`${protocol}${process.env.WEBSOCKET_SRC}` ||"ws://localhost:5000/chat", {
-      extraHeaders: {
-        Authorization:
-          typeof window !== "undefined"
-            ? localStorage.getItem("token") || ""
-            : "",
-      },
-    });
+    const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
+
+    console.log(
+      "useWebSocket process.env.WEBSOCKET_SRC: ",
+      `${protocol}${process.env.WEBSOCKET_SRC}`
+    );
+    socket = io(
+      `${protocol}${process.env.WEBSOCKET_SRC}` || "ws://localhost:5000/chat",
+      {
+        extraHeaders: {
+          Authorization:
+            typeof window !== "undefined"
+              ? localStorage.getItem("token") || ""
+              : "",
+        },
+      }
+    );
     socket.emit("userId", currentUser?.id || "");
 
     socket.on("connect", () => {
@@ -53,10 +54,10 @@ const useWebSocket = () => {
       handleToast(newRoom.id || "", "You have been invited to a new room");
     });
 
-    socket.on('deleteRoom', (roomId:string)=>{
-      dispatch(removeRoomFromAllRooms(roomId)) // delete room from list of room 
-      if(room?.id===roomId) dispatch(leave()) // leave room if room open
-    })
+    socket.on("deleteRoom", (roomId: string) => {
+      dispatch(removeRoomFromAllRooms(roomId)); // delete room from list of room
+      if (room?.id === roomId) dispatch(leave()); // leave room if room open
+    });
 
     socket.on("disconnect", () => {
       console.log("WebSocket disconnected");

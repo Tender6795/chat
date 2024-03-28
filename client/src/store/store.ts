@@ -6,20 +6,20 @@ import currentRoomSlice from "./slices/currentRoomSlice";
 import websocketMiddleware from "@/middlewares/websocketMiddleware";
 import { io, Socket } from "socket.io-client";
 
-const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
-const socket: Socket = io(
-  `${protocol}${process.env.WEBSOCKET_SRC}` || "ws://localhost:5000/chat",
-  {
-    extraHeaders: {
-      Authorization:
-        typeof window !== "undefined"
-          ? localStorage.getItem("token") || ""
-          : "",
-    },
-  }
-);
+// const protocol = window.location.protocol.includes("https") ? "wss" : "ws";
+// const socket: Socket = io(
+//   `${protocol}${process.env.WEBSOCKET_SRC}` || "ws://localhost:5000/chat",
+//   {
+//     extraHeaders: {
+//       Authorization:
+//         typeof window !== "undefined"
+//           ? localStorage.getItem("token") || ""
+//           : "",
+//     },
+//   }
+// );
 
-const socketMiddleware = websocketMiddleware(socket);
+// const socketMiddleware = websocketMiddleware(socket);
 
 export const store = configureStore({
   reducer: {

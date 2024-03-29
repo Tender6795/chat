@@ -28,7 +28,7 @@ const useWebSocket = () => {
       `${protocol}://${location.host}/chat`
     );
     socket = io(
-      `${protocol}://${location.host}/chat` || "ws://localhost:5000/chat",
+      `/chat` || "ws://localhost:5000/chat",
       {
         extraHeaders: {
           Authorization:

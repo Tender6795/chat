@@ -25,7 +25,7 @@ const useWebSocket = () => {
 
     console.log(
       "useWebSocket process.env.WEBSOCKET_SRC: ",
-      `${protocol}${process.env.WEBSOCKET_SRC}`
+      `${protocol}://${location.host}/chat`
     );
     socket = io(
       `${protocol}://${location.host}/chat` || "ws://localhost:5000/chat",

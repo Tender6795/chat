@@ -28,7 +28,7 @@ const useWebSocket = () => {
       `${protocol}${process.env.WEBSOCKET_SRC}`
     );
     socket = io(
-      `${protocol}${process.env.WEBSOCKET_SRC}` || "ws://localhost:5000/chat",
+      `${protocol}://${location.host}/chat` || "ws://localhost:5000/chat",
       {
         extraHeaders: {
           Authorization:

@@ -45,6 +45,11 @@ const useWebSocket = () => {
       console.log("WebSocket connected");
     });
 
+    socket.on("connect_error", (err) => {
+      console.log('=========connect_error==========',err);
+
+    });
+
     socket.on("createMessage:post", async (message: IChatMessage) => {
       await dispatch(addMessage(message));
       handleToast(message.roomId || "", "You have new message");

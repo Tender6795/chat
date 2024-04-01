@@ -68,11 +68,11 @@ const useWebSocket = () => {
       console.error("WebSocket error:", error.message);
     });
 
-    // return () => {
-    //   if (socket) {
-    //     socket.disconnect();
-    //   }
-    // };
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
   }, [currentUser, room]);
 
   const handleToast = (roomId: string, msg: string) => {

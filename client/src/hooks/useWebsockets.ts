@@ -30,6 +30,7 @@ const useWebSocket = () => {
     socket = io(
       `/chat` || "ws://localhost:5000/chat",
       {
+        transports: ['websocket'],
         extraHeaders: {
           Authorization:
             typeof window !== "undefined"

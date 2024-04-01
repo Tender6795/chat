@@ -17,7 +17,6 @@ import { CreateRoomDto } from 'src/room/dto/create-room.dto';
 
 @WebSocketGateway({
   namespace: 'chat',
-  transports: ['websocket'],
   cors: {
     origin: '*',
   },

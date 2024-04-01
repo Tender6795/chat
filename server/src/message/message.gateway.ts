@@ -58,7 +58,7 @@ export class MessageGateway implements OnModuleInit {
     @MessageBody() createMessageDto: CreateMessageDto,
     @CurrentUserWebsocket() user: JwtPayload,
   ) {
-    const operationTimeout = 5000;
+    const operationTimeout = 15000;
 
     const operationPromise = this.messageService.create(
       createMessageDto,

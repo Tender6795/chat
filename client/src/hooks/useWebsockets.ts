@@ -28,7 +28,7 @@ const useWebSocket = () => {
       `${protocol}://${location.host}/chat`
     );
     socket = io(
-      `/chat` || "ws://localhost:5000/chat",
+      `chat` || "ws://localhost:5000/chat",
       {
         transports: ['websocket'],
         extraHeaders: {

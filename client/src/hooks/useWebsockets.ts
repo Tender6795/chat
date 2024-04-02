@@ -37,6 +37,7 @@ const useWebSocket = () => {
               ? localStorage.getItem("token") || ""
               : "",
         },
+        path: `${protocol}://${location.host}/chat`
       }
     );
     socket.emit("userId", currentUser?.id || "");

@@ -28,7 +28,7 @@ const useWebSocket = () => {
       `${protocol}://${location.host}/chat`
     );
     socket = io(
-      `https://${location.host}/chat`,
+      `${protocol}://${location.host}/chat`,
       {
         transports: ['websocket'],
         extraHeaders: {
@@ -37,6 +37,7 @@ const useWebSocket = () => {
               ? localStorage.getItem("token") || ""
               : "",
         },
+        path:'/chat/'
       }
     );
     socket.emit("userId", currentUser?.id || "");

@@ -25,7 +25,7 @@ const useWebSocket = () => {
 
     console.log(
       "useWebSocket process.env.WEBSOCKET_SRC: ",
-      `${protocol}://${location.host}/chat`
+      `${protocol}://${location.host}`
     );
     socket = io(
       `${protocol}://${location.host}/chat`,
@@ -37,8 +37,8 @@ const useWebSocket = () => {
               ? localStorage.getItem("token") || ""
               : "",
         },
-        path:'/chat/'
-      }
+        addTrailingSlash: false
+      },
     );
     socket.emit("userId", currentUser?.id || "");
 

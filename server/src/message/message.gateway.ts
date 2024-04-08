@@ -16,7 +16,7 @@ import { FindMoreMessageInRoomDto } from './dto/find-all-message-in-room-body.dt
 import { CreateRoomDto } from 'src/room/dto/create-room.dto';
 
 @WebSocketGateway({
-  namespace: 'chat',
+  // namespace: 'chat',
   cors: {
     origin: '*',
   },
